@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.androidx.browser)
     implementation(libs.androidx.material3.window.size)
     implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.threetenabp)
     ksp(libs.androidx.room.compiler)
 
     //Coil
