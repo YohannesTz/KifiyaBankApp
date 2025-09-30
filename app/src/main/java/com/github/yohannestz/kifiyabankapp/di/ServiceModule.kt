@@ -1,13 +1,15 @@
 package com.github.yohannestz.kifiyabankapp.di
 
-import com.github.yohannestz.kifiyabankapp.data.remote.api.AccountsApiService
-import com.github.yohannestz.kifiyabankapp.data.remote.api.AuthApiService
-import com.github.yohannestz.kifiyabankapp.data.remote.api.TransactionsApiService
-import org.koin.core.module.dsl.singleOf
+import com.github.yohannestz.kifiyabankapp.data.remote.api.accounts.AccountsApiService
+import com.github.yohannestz.kifiyabankapp.data.remote.api.accounts.AccountsApiServiceImpl
+import com.github.yohannestz.kifiyabankapp.data.remote.api.auth.AuthApiService
+import com.github.yohannestz.kifiyabankapp.data.remote.api.auth.AuthApiServiceImpl
+import com.github.yohannestz.kifiyabankapp.data.remote.api.transactions.TransactionsApiService
+import com.github.yohannestz.kifiyabankapp.data.remote.api.transactions.TransactionsApiServiceImpl
 import org.koin.dsl.module
 
 val serviceModule = module {
-    singleOf(::AuthApiService)
-    singleOf(::AccountsApiService)
-    singleOf(::TransactionsApiService)
+    single<AuthApiService> { AuthApiServiceImpl(get()) }
+    single<AccountsApiService> { AccountsApiServiceImpl(get()) }
+    single<TransactionsApiService> { TransactionsApiServiceImpl(get()) }
 }
