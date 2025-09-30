@@ -9,6 +9,7 @@ import coil3.disk.directory
 import coil3.memory.MemoryCache
 import coil3.request.crossfade
 import com.github.yohannestz.kifiyabankapp.di.networkModule
+import com.github.yohannestz.kifiyabankapp.di.serviceModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.startKoin
@@ -21,7 +22,8 @@ class KifiyaBankApp : Application(), KoinComponent, SingletonImageLoader.Factory
         startKoin {
             androidContext(this@KifiyaBankApp)
             modules(
-                networkModule
+                networkModule,
+                serviceModule
             )
         }
     }
