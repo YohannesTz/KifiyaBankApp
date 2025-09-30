@@ -1,4 +1,4 @@
-package com.github.yohannestz.kifiyabankapp
+package com.github.yohannestz.kifiyabankapp.ui.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
