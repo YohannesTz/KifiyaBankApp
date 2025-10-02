@@ -2,6 +2,9 @@ package com.github.yohannestz.kifiyabankapp.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+val light_scrim = Color(0xE6FFFFFF)
+val dark_scrim = Color(0x801b1b1b)
+
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)

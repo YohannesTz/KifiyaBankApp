@@ -60,6 +60,9 @@ dependencies {
     implementation(libs.androidx.material3.window.size)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.threetenabp)
+    implementation(libs.androidx.datastore.core)
+    implementation(libs.androidx.datastore.preferences.core)
+    implementation(libs.navigation.compose)
     ksp(libs.androidx.room.compiler)
 
     //Coil
