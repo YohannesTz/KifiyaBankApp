@@ -52,6 +52,12 @@ import io.github.fornewid.placeholder.material3.placeholder
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import androidx.core.net.toUri
+import io.ktor.client.call.NoTransformationFoundException
+import io.ktor.client.network.sockets.ConnectTimeoutException
+import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.ServerResponseException
+import io.ktor.http.HttpStatusCode
+import kotlinx.serialization.SerializationException
 
 object Extensions {
     fun String.htmlDecoded() = HtmlCompat.fromHtml(this, HtmlCompat.FROM_HTML_MODE_COMPACT)
@@ -338,4 +344,39 @@ object Extensions {
             val b: Int = (blue * 255).toInt()
             return java.lang.String.format("%02X%02X%02X%02X", a, r, g, b)
         }
+
+    fun Exception.parseErrorMessageException(): String {
+        return when (this) {
+            is ServerResponseException -> "We're experiencing server issues. Please try again later."
+            is NoTransformationFoundException -> "There was an issue processing the data. Please try again."
+            is ConnectTimeoutException -> "Connection timed out. Please check your internet connection and try again."
+            is SerializationException -> "There was an issue processing the data. Please try again later."
+            is ClientRequestException -> {
+                when (response.status) {
+                    HttpStatusCode.BadRequest -> "Invalid request. Please check your input and try again."
+                    HttpStatusCode.NotFound -> "The requested resource was not found."
+                    else -> "An unexpected error occurred. Please try again later."
+                }
+            }
+            else -> "An unexpected error occurred. Please try again later."
+        }
+    }
+
+    fun Throwable.parseErrorMessageException(): String {
+        return when (this) {
+            is ServerResponseException -> "We're experiencing server issues. Please try again later."
+            is NoTransformationFoundException -> "There was an issue processing the data. Please try again."
+            is ConnectTimeoutException -> "Connection timed out. Please check your internet connection and try again."
+            is SerializationException -> "There was an issue processing the data. Please try again later."
+            is ClientRequestException -> {
+                when (response.status) {
+                    HttpStatusCode.BadRequest -> "Invalid request. Please check your input and try again."
+                    HttpStatusCode.NotFound -> "The requested resource was not found."
+                    else -> "An unexpected error occurred. Please try again later."
+                }
+            }
+            else -> "An unexpected error occurred. Please try again later."
+        }
+    }
+
 }

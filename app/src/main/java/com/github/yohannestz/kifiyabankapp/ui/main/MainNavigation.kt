@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.github.yohannestz.kifiyabankapp.ui.base.BottomDestination
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
 import com.github.yohannestz.kifiyabankapp.ui.cards.CardsView
@@ -27,8 +26,8 @@ import com.github.yohannestz.kifiyabankapp.ui.transactions.TransactionsView
 fun MainNavigation(
     navController: NavHostController,
     navActionManager: NavActionManager,
-    lastTabOpened: Int,
     isCompactScreen: Boolean,
+    startDestination: Route,
     modifier: Modifier,
     padding: PaddingValues,
     topBarHeightPx: Float,
@@ -36,8 +35,7 @@ fun MainNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = BottomDestination.values
-            .getOrElse(lastTabOpened) { BottomDestination.Home }.route,
+        startDestination = startDestination,
         modifier = modifier,
         enterTransition = {
             fadeIn() + slideIntoContainer(

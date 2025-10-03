@@ -6,19 +6,19 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.core.Animatable
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
@@ -30,27 +30,27 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.github.yohannestz.kifiyabankapp.data.model.User
+import com.github.yohannestz.kifiyabankapp.di.dataStoreModule
+import com.github.yohannestz.kifiyabankapp.ui.base.BottomDestination
 import com.github.yohannestz.kifiyabankapp.ui.base.BottomDestination.Companion.isBottomDestination
-import com.github.yohannestz.kifiyabankapp.ui.base.BottomDestination.Companion.isTopAppBarDisallowed
 import com.github.yohannestz.kifiyabankapp.ui.base.BottomDestination.Companion.toBottomDestinationIndex
 import com.github.yohannestz.kifiyabankapp.ui.base.StartTab
-import com.github.yohannestz.kifiyabankapp.ui.base.ThemeStyle
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager.Companion.rememberNavActionManager
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
+import com.github.yohannestz.kifiyabankapp.ui.base.providers.ProvideCurrentUser
 import com.github.yohannestz.kifiyabankapp.ui.main.composable.MainBottomNavBar
 import com.github.yohannestz.kifiyabankapp.ui.main.composable.MainNavigationRail
-import com.github.yohannestz.kifiyabankapp.ui.main.composable.MainTopAppBar
 import com.github.yohannestz.kifiyabankapp.ui.theme.KifiyaBankAppTheme
 import com.github.yohannestz.kifiyabankapp.ui.theme.dark_scrim
 import com.github.yohannestz.kifiyabankapp.ui.theme.light_scrim
@@ -71,62 +71,67 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         val lastTabOpened = findLastTabOpened()
-        val initialTheme = runBlocking { viewModel.theme.first() }
 
         setContent {
             KoinAndroidContext {
-                val theme by viewModel.theme.collectAsStateWithLifecycle(initialValue = initialTheme)
-                val isDark = false
-                    //if (theme == ThemeStyle.FOLLOW_SYSTEM) isSystemInDarkTheme() else theme == ThemeStyle.DARK
+                val isDark =
+                    false //if (theme == ThemeStyle.FOLLOW_SYSTEM) isSystemInDarkTheme() else theme == ThemeStyle.DARK
                 val navController = rememberNavController()
                 val navActionManager = rememberNavActionManager(navController)
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
                 val windowSizeClass = calculateWindowSizeClass(this)
                 val isCompactScreen = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
                 val windowWidthSizeClassType = windowSizeClass.widthSizeClass
 
-                KifiyaBankAppTheme(
-                    darkTheme = isDark,
-                    dynamicColor = false
+                ProvideCurrentUser(
+                    user = uiState.currentUserProfile
                 ) {
-                    val backgroundColor = MaterialTheme.colorScheme.background
-
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = backgroundColor
+                    KifiyaBankAppTheme(
+                        darkTheme = isDark,
+                        dynamicColor = false
                     ) {
-                        MainView(
-                            windowWidthSizeClass = windowWidthSizeClassType,
-                            navController = navController,
-                            navActionManager = navActionManager,
-                            lastTabOpened = lastTabOpened,
-                            saveLastTab = viewModel::saveLastTab
-                        )
+                        val backgroundColor = MaterialTheme.colorScheme.background
 
-                        DisposableEffect(isDark, navBackStackEntry) {
-                            var statusBarStyle = SystemBarStyle.auto(
-                                android.graphics.Color.TRANSPARENT,
-                                android.graphics.Color.TRANSPARENT
-                            ) { isDark }
-
-                            if (isCompactScreen && navBackStackEntry?.isBottomDestination() == true) {
-                                statusBarStyle =
-                                    if (isDark) SystemBarStyle.dark(backgroundColor.toArgb())
-                                    else SystemBarStyle.light(
-                                        backgroundColor.toArgb(),
-                                        dark_scrim.toArgb()
-                                    )
-                            }
-
-                            enableEdgeToEdge(
-                                statusBarStyle = statusBarStyle,
-                                navigationBarStyle = SystemBarStyle.auto(
-                                    light_scrim.toArgb(),
-                                    dark_scrim.toArgb(),
-                                ) { isDark },
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = backgroundColor
+                        ) {
+                            MainView(
+                                windowWidthSizeClass = windowWidthSizeClassType,
+                                navController = navController,
+                                navActionManager = navActionManager,
+                                lastTabOpened = lastTabOpened,
+                                saveLastTab = viewModel::saveLastTab,
+                                currentUserProfile = uiState.currentUserProfile,
+                                isLoading = uiState.isLoading,
                             )
-                            onDispose {}
+
+                            DisposableEffect(isDark, navBackStackEntry) {
+                                var statusBarStyle = SystemBarStyle.auto(
+                                    android.graphics.Color.TRANSPARENT,
+                                    android.graphics.Color.TRANSPARENT
+                                ) { isDark }
+
+                                if (isCompactScreen && navBackStackEntry?.isBottomDestination() == true) {
+                                    statusBarStyle =
+                                        if (isDark) SystemBarStyle.dark(backgroundColor.toArgb())
+                                        else SystemBarStyle.light(
+                                            backgroundColor.toArgb(),
+                                            dark_scrim.toArgb()
+                                        )
+                                }
+
+                                enableEdgeToEdge(
+                                    statusBarStyle = statusBarStyle,
+                                    navigationBarStyle = SystemBarStyle.auto(
+                                        light_scrim.toArgb(),
+                                        dark_scrim.toArgb(),
+                                    ) { isDark },
+                                )
+                                onDispose {}
+                            }
                         }
                     }
                 }
@@ -156,6 +161,8 @@ fun MainView(
     navActionManager: NavActionManager,
     lastTabOpened: Int,
     saveLastTab: (Int) -> Unit,
+    currentUserProfile: User?,
+    isLoading: Boolean,
 ) {
     val density = LocalDensity.current
 
@@ -181,75 +188,100 @@ fun MainView(
             }
         }
     ) { padding ->
-        when (windowWidthSizeClass) {
-            WindowWidthSizeClass.Medium -> {
-                Row(
-                    modifier = Modifier
-                        .statusBarsPadding()
-                        .padding(padding)
-                ) {
-                    MainNavigationRail(
-                        navController = navController,
-                        onItemSelected = saveLastTab,
-                        modifier = Modifier.padding(padding)
-                    )
+        if (isLoading) {
+            LoadingView(
+                paddingValues = padding
+            )
+        } else {
+            val startDestination = if (currentUserProfile != null) {
+                BottomDestination.values
+                    .getOrElse(lastTabOpened) { BottomDestination.Home }.route as Route
+            } else {
+                Route.Login
+            }
+
+            when (windowWidthSizeClass) {
+                WindowWidthSizeClass.Medium -> {
+                    Row(
+                        modifier = Modifier
+                            .statusBarsPadding()
+                            .padding(padding)
+                    ) {
+                        MainNavigationRail(
+                            navController = navController,
+                            onItemSelected = saveLastTab,
+                            modifier = Modifier.padding(padding)
+                        )
+                        MainNavigation(
+                            navController = navController,
+                            navActionManager = navActionManager,
+                            isCompactScreen = false,
+                            modifier = Modifier,
+                            padding = padding,
+                            startDestination = startDestination,
+                            topBarHeightPx = topBarHeightPx,
+                            topBarOffsetY = topBarOffsetY
+                        )
+                    }
+                }
+
+                WindowWidthSizeClass.Compact -> {
+                    LaunchedEffect(padding) {
+                        topBarHeightPx = with(density) { padding.calculateTopPadding().toPx() }
+                    }
+
                     MainNavigation(
                         navController = navController,
                         navActionManager = navActionManager,
-                        lastTabOpened = lastTabOpened,
-                        isCompactScreen = false,
-                        modifier = Modifier,
+                        isCompactScreen = true,
+                        modifier = Modifier.padding(
+                            start = padding.calculateStartPadding(LocalLayoutDirection.current),
+                            end = padding.calculateEndPadding(LocalLayoutDirection.current),
+                        ),
                         padding = padding,
+                        startDestination = startDestination,
                         topBarHeightPx = topBarHeightPx,
-                        topBarOffsetY = topBarOffsetY
+                        topBarOffsetY = topBarOffsetY,
                     )
                 }
-            }
 
-            WindowWidthSizeClass.Compact -> {
-                LaunchedEffect(padding) {
-                    topBarHeightPx = with(density) { padding.calculateTopPadding().toPx() }
-                }
-
-                MainNavigation(
-                    navController = navController,
-                    navActionManager = navActionManager,
-                    lastTabOpened = lastTabOpened,
-                    isCompactScreen = true,
-                    modifier = Modifier.padding(
-                        start = padding.calculateStartPadding(LocalLayoutDirection.current),
-                        end = padding.calculateEndPadding(LocalLayoutDirection.current),
-                    ),
-                    padding = padding,
-                    topBarHeightPx = topBarHeightPx,
-                    topBarOffsetY = topBarOffsetY,
-                )
-            }
-
-            else -> {
-                Row(
-                    modifier = Modifier
-                        .statusBarsPadding()
-                        .padding(padding)
-                ) {
-                    MainNavigationRail(
-                        navController = navController,
-                        onItemSelected = saveLastTab,
-                        navRailExpanded = true,
-                        modifier = Modifier.padding(padding)
-                    )
-                    MainNavigation(
-                        navController = navController,
-                        navActionManager = navActionManager,
-                        lastTabOpened = lastTabOpened,
-                        isCompactScreen = false,
-                        modifier = Modifier,
-                        padding = padding,
-                        topBarHeightPx = topBarHeightPx,
-                        topBarOffsetY = topBarOffsetY
-                    )
+                else -> {
+                    Row(
+                        modifier = Modifier
+                            .statusBarsPadding()
+                            .padding(padding)
+                    ) {
+                        MainNavigationRail(
+                            navController = navController,
+                            onItemSelected = saveLastTab,
+                            navRailExpanded = true,
+                            modifier = Modifier.padding(padding)
+                        )
+                        MainNavigation(
+                            navController = navController,
+                            navActionManager = navActionManager,
+                            isCompactScreen = false,
+                            modifier = Modifier,
+                            padding = padding,
+                            startDestination = startDestination,
+                            topBarHeightPx = topBarHeightPx,
+                            topBarOffsetY = topBarOffsetY
+                        )
+                    }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun LoadingView(paddingValues: PaddingValues) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
     }
 }
