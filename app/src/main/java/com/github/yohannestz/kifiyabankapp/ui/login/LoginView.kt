@@ -247,7 +247,7 @@ private fun LoginViewContent(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Text("don't have an account?", color = Color.DarkGray)
+                Text(stringResource(R.string.don_t_have_an_account), color = Color.DarkGray)
             }
 
             Spacer(modifier = Modifier.width(4.dp))
@@ -257,7 +257,7 @@ private fun LoginViewContent(
                 horizontalArrangement = Arrangement.Center
             ) {
                 TextButton(onClick = { navActionManager.navigateTo(Route.Register) }) {
-                    Text("register", color = MaterialTheme.colorScheme.primary)
+                    Text(stringResource(R.string.register), color = MaterialTheme.colorScheme.primary)
                 }
             }
         }

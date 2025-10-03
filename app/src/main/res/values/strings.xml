@@ -19,4 +19,17 @@
     <string name="password">Password</string>
     <string name="please_enter_your_password">please enter your password</string>
     <string name="login">Login</string>
+    <string name="error_firstname_cannot_be_empty">First Name cannot be empty</string>
+    <string name="error_lastName_cannot_be_empty">Last Name cannot be empty</string>
+    <string name="error_userName_cannot_be_empty">User Name cannot be empty</string>
+    <string name="error_phoneNumber_cannot_be_empty">Phone Number cannot be empty</string>
+    <string name="don_t_have_an_account">don\'t have an account?</string>
+    <string name="register">Register</string>
+    <string name="already_have_an_account">already have an account?</string>
+    <string name="phone_number">Phone number</string>
+    <string name="first_name">First Name</string>
+    <string name="please_enter_your_firstname">Please enter your name</string>
+    <string name="last_name">Last Name</string>
+    <string name="please_enter_your_lastname">Please enter your last name</string>
+    <string name="please_enter_your_phonenumber">Please enter your phone number</string>
 </resources>
