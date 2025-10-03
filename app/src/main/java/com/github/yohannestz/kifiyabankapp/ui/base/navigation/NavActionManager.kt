@@ -14,6 +14,10 @@ class NavActionManager(
         navController.navigate(route)
     }
 
+    fun goBack() {
+        navController.popBackStack()
+    }
+
     companion object {
         @Composable
         fun rememberNavActionManager(

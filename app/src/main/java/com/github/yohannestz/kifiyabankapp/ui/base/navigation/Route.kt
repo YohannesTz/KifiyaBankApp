@@ -30,3 +30,30 @@ sealed interface Route {
     @Serializable
     data object AccountsList: Route
 }
+
+fun Route.hasDarkStatusBar(): Boolean {
+    return when (this) {
+        Route.Login,
+        Route.Register -> true
+
+        Route.TransactionList,
+        Route.AccountsList,
+        is Route.Tab.Home,
+        is Route.Tab.Cards,
+        is Route.Tab.Transactions,
+        is Route.Tab.Profile -> false
+    }
+}
+fun String.toRoute(): Route? {
+    return when (this) {
+        Route.Login::class.qualifiedName -> Route.Login
+        Route.Register::class.qualifiedName -> Route.Register
+        Route.TransactionList::class.qualifiedName -> Route.TransactionList
+        Route.AccountsList::class.qualifiedName -> Route.AccountsList
+        Route.Tab.Home::class.qualifiedName -> Route.Tab.Home
+        Route.Tab.Cards::class.qualifiedName -> Route.Tab.Cards
+        Route.Tab.Transactions::class.qualifiedName -> Route.Tab.Transactions
+        Route.Tab.Profile::class.qualifiedName -> Route.Tab.Profile
+        else -> null
+    }
+}

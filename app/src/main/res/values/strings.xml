@@ -9,4 +9,14 @@
     <string name="title_transactions">Transactions</string>
     <string name="title_profile">Profile</string>
     <string name="last_used">Last Used</string>
+    <string name="error_username_cannot_be_empty">Username cannot be empty</string>
+    <string name="error_password_invalid">Password is invalid</string>
+    <string name="error_password_cannot_be_empty">Password cannot be empty</string>
+    <string name="welcome">Welcome</string>
+    <string name="login_here">Login here</string>
+    <string name="username">Username</string>
+    <string name="please_enter_your_username">please enter your username</string>
+    <string name="password">Password</string>
+    <string name="please_enter_your_password">please enter your password</string>
+    <string name="login">Login</string>
 </resources>

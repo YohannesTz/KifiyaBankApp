@@ -1,6 +1,7 @@
 package com.github.yohannestz.kifiyabankapp.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -48,6 +49,8 @@ import com.github.yohannestz.kifiyabankapp.ui.base.StartTab
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager.Companion.rememberNavActionManager
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
+import com.github.yohannestz.kifiyabankapp.ui.base.navigation.hasDarkStatusBar
+import com.github.yohannestz.kifiyabankapp.ui.base.navigation.toRoute
 import com.github.yohannestz.kifiyabankapp.ui.base.providers.ProvideCurrentUser
 import com.github.yohannestz.kifiyabankapp.ui.main.composable.MainBottomNavBar
 import com.github.yohannestz.kifiyabankapp.ui.main.composable.MainNavigationRail
@@ -108,28 +111,27 @@ class MainActivity : ComponentActivity() {
                                 isLoading = uiState.isLoading,
                             )
 
-                            DisposableEffect(isDark, navBackStackEntry) {
-                                var statusBarStyle = SystemBarStyle.auto(
-                                    android.graphics.Color.TRANSPARENT,
-                                    android.graphics.Color.TRANSPARENT
-                                ) { isDark }
+                            DisposableEffect(navBackStackEntry) {
+                                val route = navBackStackEntry?.destination?.route?.toRoute()
+                                val darkStatusBar = route?.hasDarkStatusBar() ?: false
 
-                                if (isCompactScreen && navBackStackEntry?.isBottomDestination() == true) {
-                                    statusBarStyle =
-                                        if (isDark) SystemBarStyle.dark(backgroundColor.toArgb())
-                                        else SystemBarStyle.light(
-                                            backgroundColor.toArgb(),
-                                            dark_scrim.toArgb()
-                                        )
+                                val statusBarStyle = if (darkStatusBar) {
+                                    SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+                                } else {
+                                    SystemBarStyle.light(
+                                        android.graphics.Color.TRANSPARENT,
+                                        dark_scrim.toArgb()
+                                    )
                                 }
 
                                 enableEdgeToEdge(
                                     statusBarStyle = statusBarStyle,
                                     navigationBarStyle = SystemBarStyle.auto(
                                         light_scrim.toArgb(),
-                                        dark_scrim.toArgb(),
-                                    ) { isDark },
+                                        dark_scrim.toArgb()
+                                    ) { darkStatusBar },
                                 )
+
                                 onDispose {}
                             }
                         }
