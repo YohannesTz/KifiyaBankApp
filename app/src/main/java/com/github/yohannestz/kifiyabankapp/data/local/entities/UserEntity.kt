@@ -2,6 +2,7 @@ package com.github.yohannestz.kifiyabankapp.data.local.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.github.yohannestz.kifiyabankapp.data.model.User
 
 @Entity(tableName = "users")
 data class UserEntity(
@@ -12,4 +13,13 @@ data class UserEntity(
     val email: String?,
     val phoneNumber: String?,
     val lastUpdated: Long = System.currentTimeMillis()
-)
+) {
+    fun toUser() = User(
+        id = id,
+        username = username,
+        firstName = firstName,
+        lastName = lastName,
+        email = email,
+        phoneNumber = phoneNumber
+    )
+}

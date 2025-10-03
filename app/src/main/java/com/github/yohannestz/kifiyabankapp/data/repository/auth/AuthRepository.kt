@@ -6,9 +6,16 @@ import com.github.yohannestz.kifiyabankapp.data.dto.refreshtoken.RefreshTokenReq
 import com.github.yohannestz.kifiyabankapp.data.dto.refreshtoken.RefreshTokenResponse
 import com.github.yohannestz.kifiyabankapp.data.dto.register.RegisterRequest
 import com.github.yohannestz.kifiyabankapp.data.dto.register.RegisterResponse
+import com.github.yohannestz.kifiyabankapp.data.local.entities.UserEntity
+import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
     suspend fun register(request: RegisterRequest): Result<RegisterResponse>
     suspend fun login(request: LoginRequest): Result<LoginResponse>
     suspend fun refreshToken(request: RefreshTokenRequest): Result<RefreshTokenResponse>
+
+    suspend fun saveUser(user: UserEntity)
+    suspend fun getCurrentUser(): UserEntity?
+    suspend fun getCurrentUserFlow(): Flow<UserEntity?>
+    suspend fun clearUserData()
 }
