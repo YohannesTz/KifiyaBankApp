@@ -25,11 +25,12 @@ class KifiyaBankApp : Application(), KoinComponent, SingletonImageLoader.Factory
         startKoin {
             androidContext(this@KifiyaBankApp)
             modules(
-                networkModule,
-                serviceModule,
-                repositoryModule,
                 dataStoreModule,
-                viewModelModule
+                networkModule,
+                repositoryModule,
+                serviceModule,
+                viewModelModule,
+                dataStoreModule
             )
         }
     }
