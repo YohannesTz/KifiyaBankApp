@@ -85,7 +85,6 @@ class MainActivity : ComponentActivity() {
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
                 val windowSizeClass = calculateWindowSizeClass(this)
-                val isCompactScreen = windowSizeClass.widthSizeClass == WindowWidthSizeClass.Compact
                 val windowWidthSizeClassType = windowSizeClass.widthSizeClass
 
                 ProvideCurrentUser(
@@ -195,7 +194,7 @@ fun MainView(
                 paddingValues = padding
             )
         } else {
-            val startDestination = if (currentUserProfile != null) {
+            val startDestination = if (true) {//if (currentUserProfile != null) {
                 BottomDestination.values
                     .getOrElse(lastTabOpened) { BottomDestination.Home }.route as Route
             } else {

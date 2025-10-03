@@ -32,4 +32,10 @@
     <string name="last_name">Last Name</string>
     <string name="please_enter_your_lastname">Please enter your last name</string>
     <string name="please_enter_your_phonenumber">Please enter your phone number</string>
+    <string name="transfer">Transfer</string>
+    <string name="bills">Bills</string>
+    <string name="recharge">Recharge</string>
+    <string name="more">More</string>
+    <string name="my_accounts">My Accounts</string>
+    <string name="view_all">View All</string>
 </resources>

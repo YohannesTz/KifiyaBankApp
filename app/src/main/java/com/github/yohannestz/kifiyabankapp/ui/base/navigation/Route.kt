@@ -34,11 +34,11 @@ sealed interface Route {
 fun Route.hasDarkStatusBar(): Boolean {
     return when (this) {
         Route.Login,
-        Route.Register -> true
+        Route.Register,
+        is Route.Tab.Home -> true
 
         Route.TransactionList,
         Route.AccountsList,
-        is Route.Tab.Home,
         is Route.Tab.Cards,
         is Route.Tab.Transactions,
         is Route.Tab.Profile -> false
