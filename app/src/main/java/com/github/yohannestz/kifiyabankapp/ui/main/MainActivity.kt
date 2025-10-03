@@ -76,8 +76,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             KoinAndroidContext {
                 val theme by viewModel.theme.collectAsStateWithLifecycle(initialValue = initialTheme)
-                val isDark =
-                    if (theme == ThemeStyle.FOLLOW_SYSTEM) isSystemInDarkTheme() else theme == ThemeStyle.DARK
+                val isDark = false
+                    //if (theme == ThemeStyle.FOLLOW_SYSTEM) isSystemInDarkTheme() else theme == ThemeStyle.DARK
                 val navController = rememberNavController()
                 val navActionManager = rememberNavActionManager(navController)
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -167,25 +167,10 @@ fun MainView(
     val isBottomDestination by remember {
         derivedStateOf { navBackStackEntry?.isBottomDestination() == true }
     }
-    val isTopAppBarDisallowed by remember {
-        derivedStateOf { navBackStackEntry?.isTopAppBarDisallowed() == true }
-    }
 
     Scaffold(
-        /*topBar = {
-            if (windowWidthSizeClass == WindowWidthSizeClass.Compact) {
-                MainTopAppBar(
-                    isVisible = (isBottomDestination && !isTopAppBarDisallowed),
-                    navController = navController,
-                    modifier = Modifier
-                        .graphicsLayer {
-                            translationY = topBarOffsetY.value
-                        }
-                )
-            }
-        },*/
         bottomBar = {
-            if (windowWidthSizeClass != WindowWidthSizeClass.Compact) {
+            if (windowWidthSizeClass == WindowWidthSizeClass.Compact) {
                 MainBottomNavBar(
                     navController = navController,
                     navBackStackEntry = navBackStackEntry,

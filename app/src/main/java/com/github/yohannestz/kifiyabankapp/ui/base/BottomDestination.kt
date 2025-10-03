@@ -38,7 +38,7 @@ sealed class BottomDestination(
         value = "transactions",
         route = Route.Tab.Transactions,
         title = R.string.title_transactions,
-        icon = R.drawable.ic_round_article_24
+        icon = R.drawable.ic_outline_article_24
     )
 
     data object Profile : BottomDestination(
