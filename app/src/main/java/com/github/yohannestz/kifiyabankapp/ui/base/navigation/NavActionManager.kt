@@ -14,6 +14,15 @@ class NavActionManager(
         navController.navigate(route)
     }
 
+    fun navigateTo(route: Route, launchSingleTop: Boolean = false, inclusive: Boolean = false) {
+        navController.navigate(route) {
+            this.launchSingleTop = launchSingleTop
+            popUpTo(route) {
+                this.inclusive = inclusive
+            }
+        }
+    }
+
     fun goBack() {
         navController.popBackStack()
     }

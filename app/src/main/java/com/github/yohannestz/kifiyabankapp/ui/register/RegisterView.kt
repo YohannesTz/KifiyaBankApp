@@ -283,7 +283,7 @@ private fun RegisterViewContent(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                TextButton(onClick = { navActionManager.navigateTo(Route.Login) }) {
+                TextButton(onClick = { navActionManager.navigateTo(route = Route.Login, launchSingleTop = true) }) {
                     Text(stringResource(R.string.login), color = MaterialTheme.colorScheme.primary)
                 }
             }

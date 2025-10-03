@@ -256,7 +256,7 @@ private fun LoginViewContent(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                TextButton(onClick = { navActionManager.navigateTo(Route.Register) }) {
+                TextButton(onClick = { navActionManager.navigateTo(route = Route.Register, launchSingleTop = true) }) {
                     Text(stringResource(R.string.register), color = MaterialTheme.colorScheme.primary)
                 }
             }

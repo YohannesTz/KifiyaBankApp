@@ -38,23 +38,26 @@ fun MainNavigation(
         startDestination = startDestination,
         modifier = modifier,
         enterTransition = {
-            fadeIn() + slideIntoContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Start,
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.Start,
                 animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
             )
         },
         exitTransition = {
-            fadeOut() + slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.End,
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.Start,
                 animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
             )
         },
         popEnterTransition = {
-            fadeIn()
+            slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.End,
+                animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+            )
         },
         popExitTransition = {
-            fadeOut() + slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.End,
+            slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.End,
                 animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
             )
         }
