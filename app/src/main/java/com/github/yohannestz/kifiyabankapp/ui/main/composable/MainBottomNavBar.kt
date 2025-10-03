@@ -56,9 +56,20 @@ fun MainBottomNavBar(
                 val isSelected = navBackStackEntry?.destination?.hierarchy?.any {
                     it.hasRoute(dest.route::class)
                 } == true
+
+                val textColor = if (isSelected) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.secondary
+                }
+
                 NavigationBarItem(
                     icon = { dest.Icon(selected = isSelected) },
-                    label = { Text(text = stringResource(dest.title)) },
+                    label = {
+                        Text(
+                            text = stringResource(dest.title), color = textColor,
+                        )
+                    },
                     selected = isSelected,
                     onClick = {
                         if (!isSelected) {

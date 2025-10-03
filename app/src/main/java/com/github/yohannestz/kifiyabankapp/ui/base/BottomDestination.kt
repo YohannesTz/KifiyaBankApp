@@ -76,7 +76,7 @@ sealed class BottomDestination(
             val color = if (selected) {
                 MaterialTheme.colorScheme.primary
             } else {
-                MaterialTheme.colorScheme.onSurfaceVariant
+                MaterialTheme.colorScheme.secondary
             }
 
             androidx.compose.material3.Icon(
