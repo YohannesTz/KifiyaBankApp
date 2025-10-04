@@ -41,7 +41,7 @@ fun TransactionLazyListContainer(
 ) {
     LazyColumn(
         modifier = modifier
-            .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(12.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp)),
         content = content
     )
@@ -75,7 +75,7 @@ fun TransactionListItem(
                         modifier = Modifier
                             .size(48.dp)
                             .clip(CircleShape)
-                            .border(1.dp, MaterialTheme.colorScheme.secondary, CircleShape),
+                            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f), CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(

@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.github.yohannestz.kifiyabankapp.R
 
 @Composable
 fun SettingsItem(
@@ -33,7 +34,7 @@ fun SettingsItem(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(vertical = 16.dp, horizontal = 8.dp),
+            .padding(vertical = 16.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -57,7 +58,7 @@ fun SettingsItem(
             modifier = Modifier.weight(1f)
         )
         Icon(
-            imageVector = Icons.Default.PlayArrow,
+            painter = painterResource(id = R.drawable.ic_outline_keyboard_arrow_right_24),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurfaceVariant
         )

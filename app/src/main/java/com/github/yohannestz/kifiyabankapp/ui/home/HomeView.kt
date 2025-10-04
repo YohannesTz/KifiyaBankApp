@@ -217,7 +217,7 @@ fun AccountListContainer(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(12.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp))
     ) {
         content()
@@ -232,7 +232,7 @@ fun TransactionListContainer(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(12.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp))
     ) {
         content()

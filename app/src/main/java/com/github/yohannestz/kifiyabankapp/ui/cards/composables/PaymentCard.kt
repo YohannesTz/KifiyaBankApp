@@ -1,10 +1,13 @@
 package com.github.yohannestz.kifiyabankapp.ui.cards.composables
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,7 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.github.yohannestz.kifiyabankapp.R
 
 @Composable
 fun PaymentCard(
@@ -31,7 +36,10 @@ fun PaymentCard(
             .clip(RoundedCornerShape(20.dp))
             .background(
                 brush = Brush.linearGradient(
-                    colors = listOf(Color(0xFF5C6BC0), Color(0xFF3949AB))
+                    colors = listOf(
+                        Color(0xFF2F41AD),
+                        Color(0xFFA8B3DC),
+                    )
                 )
             )
             .padding(16.dp)
@@ -40,25 +48,45 @@ fun PaymentCard(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = cardNumber,
-                style = MaterialTheme.typography.bodyLarge.copy(color = Color.White)
-            )
-            Column {
-                Text(
-                    text = "Available Balance",
-                    style = MaterialTheme.typography.labelSmall.copy(color = Color.White.copy(alpha = 0.8f))
-                )
-                Text(
-                    text = availableBalance,
-                    style = MaterialTheme.typography.titleLarge.copy(color = Color.White)
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.ic_visa_logo),
+                    contentDescription = null
                 )
             }
+
             Text(
-                text = expiry,
-                style = MaterialTheme.typography.bodySmall.copy(color = Color.White),
-                modifier = Modifier.align(Alignment.End)
+                text = cardNumber,
+                style = MaterialTheme.typography.titleMedium.copy(color = Color.White)
             )
+
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column {
+                    Text(
+                        text = "Available Balance",
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            color = Color.White.copy(
+                                alpha = 0.8f
+                            )
+                        )
+                    )
+                    Text(
+                        text = availableBalance,
+                        style = MaterialTheme.typography.titleLarge.copy(color = Color.White)
+                    )
+                }
+                Text(
+                    text = expiry,
+                    style = MaterialTheme.typography.bodySmall.copy(color = Color.White),
+                )
+            }
         }
     }
 }

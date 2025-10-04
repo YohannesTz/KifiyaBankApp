@@ -44,7 +44,7 @@ fun AccountListContainer(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(12.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outline.copy(0.4f), RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp))
     ) {
         content()
@@ -94,7 +94,7 @@ fun AccountListItem(
                         modifier = Modifier
                             .size(48.dp)
                             .clip(CircleShape)
-                            .border(1.dp, MaterialTheme.colorScheme.secondary, CircleShape),
+                            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f), CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -155,7 +155,7 @@ fun AccountListItem(
 
             if (showDivider) {
                 HorizontalDivider(
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
                     thickness = 1.dp
                 )
             }
