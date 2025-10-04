@@ -30,15 +30,14 @@ fun ServiceItem(
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .clickable(onClick = onClicked)
     ) {
         Box(
             modifier = Modifier
                 .size(72.dp)
                 .align(Alignment.CenterHorizontally)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), CircleShape),
+                .clip(CircleShape)
+                .clickable(onClick = onClicked)
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
             contentAlignment = Alignment.Center
         ) {
             Icon(

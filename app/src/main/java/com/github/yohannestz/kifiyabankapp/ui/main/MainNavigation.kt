@@ -5,8 +5,6 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -64,11 +62,8 @@ fun MainNavigation(
     ) {
         composable<Route.Tab.Home> {
             HomeView(
-                isCompactScreen = isCompactScreen,
                 navActionManager = navActionManager,
-                padding = padding,
-                topBarHeightPx = topBarHeightPx,
-                topBarOffsetY = topBarOffsetY
+                padding = padding
             )
         }
 

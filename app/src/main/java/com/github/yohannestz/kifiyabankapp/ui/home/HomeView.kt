@@ -1,20 +1,20 @@
 package com.github.yohannestz.kifiyabankapp.ui.home
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
@@ -30,15 +30,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.yohannestz.kifiyabankapp.R
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager
+import com.github.yohannestz.kifiyabankapp.ui.home.composables.AccountListItem
+import com.github.yohannestz.kifiyabankapp.ui.home.composables.HomeHeader
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.ServiceItem
+import com.github.yohannestz.kifiyabankapp.ui.home.composables.TransactionListItem
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeView(
-    isCompactScreen: Boolean,
     navActionManager: NavActionManager,
-    topBarHeightPx: Float,
-    topBarOffsetY: Animatable<Float, AnimationVector1D>,
     padding: PaddingValues,
 ) {
     val viewModel: HomeViewModel = koinViewModel()
@@ -47,6 +47,7 @@ fun HomeView(
     HomeViewContent(
         uiState = uiState,
         event = viewModel,
+        padding = padding,
         navActionManager = navActionManager
     )
 }
@@ -55,6 +56,7 @@ fun HomeView(
 private fun HomeViewContent(
     uiState: HomeViewUiState,
     event: HomeViewUiEvent?,
+    padding: PaddingValues,
     navActionManager: NavActionManager
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
@@ -66,90 +68,173 @@ private fun HomeViewContent(
         }
     }
 
+    val accounts = remember {
+        listOf(
+            Triple("Saving", "100000001011", 2000),
+            Triple("Checking", "100000001012", 5000),
+        )
+    }
+
+    val transactions = remember {
+        listOf(
+            Triple("Grocery Store", 1500, "Oct 4, 2025"),
+            Triple("Electricity Bill", 1200, "Oct 3, 2025"),
+        )
+    }
+
     Box(
         modifier = Modifier
+            .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(240.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.primary,
-                )
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 24.dp, top = 48.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.welcome),
-                    style = MaterialTheme.typography.headlineMedium.copy(color = MaterialTheme.colorScheme.onPrimary)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = stringResource(R.string.login_here),
-                    style = MaterialTheme.typography.displayMedium.copy(color = MaterialTheme.colorScheme.onPrimary)
-                )
-            }
-        }
+        HomeHeader(
+            padding = padding,
+            userName = "Jane Foe",
+            balance = 8500,
+            isBalanceVisible = false,
+            onToggleBalance = {  }
+        )
 
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .offset(y = 180.dp)
-                .clip(RoundedCornerShape(48.dp))
+                .clip(RoundedCornerShape(topStart = 48.dp, topEnd = 48.dp))
                 .background(MaterialTheme.colorScheme.surface)
-                .padding(horizontal = 16.dp)
-                .imePadding(),
-            verticalArrangement = Arrangement.Center,
+                .padding(horizontal = 16.dp, vertical = 24.dp),
+            verticalArrangement = Arrangement.Top,
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                ServiceItem(
-                    iconResId = R.drawable.ic_round_sync_alt_24,
-                    titleResId = R.string.transfer,
-                ) { }
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    ServiceItem(
+                        iconResId = R.drawable.ic_round_sync_alt_24,
+                        titleResId = R.string.transfer,
+                    ) { }
 
-                ServiceItem(
-                    iconResId = R.drawable.ic_outline_article_24,
-                    titleResId = R.string.bills,
-                ) { }
+                    ServiceItem(
+                        iconResId = R.drawable.ic_outline_article_24,
+                        titleResId = R.string.bills,
+                    ) { }
 
-                ServiceItem(
-                    iconResId = R.drawable.ic_outline_mobile_24,
-                    titleResId = R.string.recharge,
-                ) { }
+                    ServiceItem(
+                        iconResId = R.drawable.ic_outline_mobile_24,
+                        titleResId = R.string.recharge,
+                    ) { }
 
-                ServiceItem(
-                    iconResId = R.drawable.ic_outline_more_horiz_24,
-                    titleResId = R.string.more,
-                ) { }
+                    ServiceItem(
+                        iconResId = R.drawable.ic_outline_more_horiz_24,
+                        titleResId = R.string.more,
+                    ) { }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text(
-                    text = stringResource(R.string.my_accounts),
-                    style = MaterialTheme.typography.titleMedium
-                )
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                Text(
-                    text = stringResource(R.string.view_all),
-                    style = MaterialTheme.typography.bodyMedium
-                )
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(
+                        text = stringResource(R.string.my_accounts),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = stringResource(R.string.view_all),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            item {
+                AccountListContainer(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    accounts.forEachIndexed { index, (type, number, balance) ->
+                        AccountListItem(
+                            iconResId = R.drawable.ic_outline_account_circle_24,
+                            accountType = type,
+                            accountNumber = number,
+                            balance = balance,
+                            lastUpdated = "01/24",
+                            showDivider = index < accounts.size - 1
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(R.string.recent_transactions),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Text(
+                        text = stringResource(R.string.view_all),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            item {
+                TransactionListContainer(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    transactions.forEachIndexed { index, (title, amount, date) ->
+                        TransactionListItem(
+                            iconResId = R.drawable.ic_round_sync_alt_24,
+                            title = title,
+                            spentAmount = amount,
+                            showDivider = index < transactions.size - 1
+                        )
+                    }
+                }
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(64.dp))
+            }
         }
+    }
+}
+
+@Composable
+fun AccountListContainer(
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(12.dp))
+    ) {
+        content()
+    }
+}
+
+@Composable
+fun TransactionListContainer(
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(12.dp))
+    ) {
+        content()
     }
 }
