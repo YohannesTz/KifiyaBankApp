@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.yohannestz.kifiyabankapp.R
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager
+import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.AccountListItem
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.HomeHeader
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.ServiceItem
@@ -112,7 +113,9 @@ private fun HomeViewContent(
                     ServiceItem(
                         iconResId = R.drawable.ic_round_sync_alt_24,
                         titleResId = R.string.transfer,
-                    ) { }
+                    ) {
+                        navActionManager.navigateTo(Route.Transfer)
+                    }
 
                     ServiceItem(
                         iconResId = R.drawable.ic_outline_article_24,

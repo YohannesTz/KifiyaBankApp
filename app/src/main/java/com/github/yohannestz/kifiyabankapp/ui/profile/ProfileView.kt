@@ -24,6 +24,6 @@ fun ProfileView(
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = "Profile View")
+        Text(text = "Was Not included in the figma design")
     }
 }

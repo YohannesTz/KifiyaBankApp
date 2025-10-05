@@ -19,6 +19,7 @@ import com.github.yohannestz.kifiyabankapp.ui.login.LoginView
 import com.github.yohannestz.kifiyabankapp.ui.profile.ProfileView
 import com.github.yohannestz.kifiyabankapp.ui.register.RegisterView
 import com.github.yohannestz.kifiyabankapp.ui.transactions.TransactionsView
+import com.github.yohannestz.kifiyabankapp.ui.transfer.TransferView
 
 @Composable
 fun MainNavigation(
@@ -106,6 +107,13 @@ fun MainNavigation(
         composable<Route.Register> {
             RegisterView(
                 navActionManager = navActionManager
+            )
+        }
+
+        composable<Route.Transfer> {
+            TransferView(
+                navActionManager = navActionManager,
+                paddingValues = padding
             )
         }
     }

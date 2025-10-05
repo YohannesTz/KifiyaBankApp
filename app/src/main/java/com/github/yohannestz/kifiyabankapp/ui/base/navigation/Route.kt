@@ -29,6 +29,9 @@ sealed interface Route {
 
     @Serializable
     data object AccountsList: Route
+
+    @Serializable
+    data object Transfer: Route
 }
 
 fun Route.hasDarkStatusBar(): Boolean {
@@ -39,6 +42,7 @@ fun Route.hasDarkStatusBar(): Boolean {
 
         Route.TransactionList,
         Route.AccountsList,
+        Route.Transfer,
         is Route.Tab.Cards,
         is Route.Tab.Transactions,
         is Route.Tab.Profile -> false
