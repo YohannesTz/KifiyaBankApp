@@ -28,6 +28,7 @@ threetenabp = "1.4.9"
 datastoreCore = "1.1.7"
 datastorePreferencesCore = "1.1.7"
 navigationComposeVersion = "2.9.5"
+coreSplashscreenVersion = "1.2.0-rc01"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -73,6 +74,7 @@ threetenabp = { group = "com.jakewharton.threetenabp", name = "threetenabp", ver
 androidx-datastore-core = { group = "androidx.datastore", name = "datastore-core", version.ref = "datastoreCore" }
 androidx-datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastorePreferencesCore" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationComposeVersion" }
+core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreenVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,7 +1,6 @@
 package com.github.yohannestz.kifiyabankapp.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -36,12 +35,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.github.yohannestz.kifiyabankapp.data.model.User
-import com.github.yohannestz.kifiyabankapp.di.dataStoreModule
 import com.github.yohannestz.kifiyabankapp.ui.base.BottomDestination
 import com.github.yohannestz.kifiyabankapp.ui.base.BottomDestination.Companion.isBottomDestination
 import com.github.yohannestz.kifiyabankapp.ui.base.BottomDestination.Companion.toBottomDestinationIndex
@@ -52,6 +51,7 @@ import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.hasDarkStatusBar
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.toRoute
 import com.github.yohannestz.kifiyabankapp.ui.base.providers.ProvideCurrentUser
+import com.github.yohannestz.kifiyabankapp.ui.base.snackbar.GlobalSnackBarHost
 import com.github.yohannestz.kifiyabankapp.ui.main.composable.MainBottomNavBar
 import com.github.yohannestz.kifiyabankapp.ui.main.composable.MainNavigationRail
 import com.github.yohannestz.kifiyabankapp.ui.theme.KifiyaBankAppTheme
@@ -70,8 +70,13 @@ class MainActivity : ComponentActivity() {
     val viewModel by viewModel<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        splashScreen.setKeepOnScreenCondition {
+            viewModel.uiState.value.isLoading
+        }
 
         val lastTabOpened = findLastTabOpened()
 
@@ -119,7 +124,7 @@ class MainActivity : ComponentActivity() {
                                 } else {
                                     SystemBarStyle.light(
                                         android.graphics.Color.TRANSPARENT,
-                                        dark_scrim.toArgb()
+                                        light_scrim.toArgb()
                                     )
                                 }
 
@@ -177,6 +182,9 @@ fun MainView(
     }
 
     Scaffold(
+        snackbarHost = {
+            GlobalSnackBarHost()
+        },
         bottomBar = {
             if (windowWidthSizeClass == WindowWidthSizeClass.Compact) {
                 MainBottomNavBar(
@@ -194,7 +202,7 @@ fun MainView(
                 paddingValues = padding
             )
         } else {
-            val startDestination = if (true) {//if (currentUserProfile != null) {
+            val startDestination = if (currentUserProfile != null) {
                 BottomDestination.values
                     .getOrElse(lastTabOpened) { BottomDestination.Home }.route as Route
             } else {

@@ -42,22 +42,21 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.os.LocaleListCompat
 import androidx.core.text.HtmlCompat
 import com.github.yohannestz.kifiyabankapp.R
-
 import io.github.fornewid.placeholder.foundation.PlaceholderHighlight
 import io.github.fornewid.placeholder.material3.fade
 import io.github.fornewid.placeholder.material3.placeholder
-import kotlinx.coroutines.launch
-import kotlin.math.abs
-import androidx.core.net.toUri
 import io.ktor.client.call.NoTransformationFoundException
 import io.ktor.client.network.sockets.ConnectTimeoutException
 import io.ktor.client.plugins.ClientRequestException
 import io.ktor.client.plugins.ServerResponseException
 import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.launch
 import kotlinx.serialization.SerializationException
+import kotlin.math.abs
 
 object Extensions {
     fun String.htmlDecoded() = HtmlCompat.fromHtml(this, HtmlCompat.FROM_HTML_MODE_COMPACT)

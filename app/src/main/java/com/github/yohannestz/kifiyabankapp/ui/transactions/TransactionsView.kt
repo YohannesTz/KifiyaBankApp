@@ -30,7 +30,6 @@ import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager
 import com.github.yohannestz.kifiyabankapp.ui.home.TransactionListContainer
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.TransactionListItem
 import com.github.yohannestz.kifiyabankapp.ui.transactions.composables.TransactionFilterButton
-import kotlin.collections.listOf
 
 @Composable
 fun TransactionsView(

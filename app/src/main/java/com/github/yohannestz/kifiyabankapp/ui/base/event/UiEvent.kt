@@ -7,5 +7,6 @@ interface UiEvent {
     fun showMessage(exception: Exception?)
     fun showMessage(message: String?)
     fun showMessage(messageRes: Int, context: Context)
+    fun showMessage(message: String?, messageId: Long)
     fun onMessageDisplayed()
 }

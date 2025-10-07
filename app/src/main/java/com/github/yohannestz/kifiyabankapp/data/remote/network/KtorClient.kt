@@ -1,14 +1,19 @@
 package com.github.yohannestz.kifiyabankapp.data.remote.network
 
 import android.annotation.SuppressLint
+import android.os.Build
+import com.github.yohannestz.kifiyabankapp.BuildConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.ANDROID
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
+import io.ktor.client.request.header
+import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -32,6 +37,12 @@ val ktorHttpClient = HttpClient(OkHttp) {
         socketTimeoutMillis = 60_000
     }
 
+    install(DefaultRequest) {
+        url(BuildConfig.BASE_API_URL)
+
+        val defaultUserAgent = "KifiyaBankApp-Android/${BuildConfig.VERSION_NAME}; Android/${Build.VERSION.RELEASE} (${Build.MODEL}/${Build.MANUFACTURER}; API ${Build.VERSION.SDK_INT})"
+        header(HttpHeaders.UserAgent, defaultUserAgent)
+    }
 
     install(Logging) {
         logger = Logger.ANDROID

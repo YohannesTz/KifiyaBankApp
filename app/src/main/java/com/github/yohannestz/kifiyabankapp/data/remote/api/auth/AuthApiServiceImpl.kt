@@ -6,8 +6,8 @@ import com.github.yohannestz.kifiyabankapp.data.dto.refreshtoken.RefreshTokenReq
 import com.github.yohannestz.kifiyabankapp.data.dto.refreshtoken.RefreshTokenResponse
 import com.github.yohannestz.kifiyabankapp.data.dto.register.RegisterRequest
 import com.github.yohannestz.kifiyabankapp.data.dto.register.RegisterResponse
+import com.github.yohannestz.kifiyabankapp.data.remote.network.safeApiCall
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
@@ -15,25 +15,25 @@ import io.ktor.http.contentType
 
 class AuthApiServiceImpl(private val client: HttpClient) : AuthApiService {
 
-    override suspend fun register(request: RegisterRequest): Result<RegisterResponse> = runCatching {
+    override suspend fun register(request: RegisterRequest): Result<RegisterResponse> = safeApiCall {
         client.post("/api/auth/register") {
             contentType(ContentType.Application.Json)
             setBody(request)
-        }.body()
+        }
     }
 
-    override suspend fun login(request: LoginRequest): Result<LoginResponse> = runCatching {
+    override suspend fun login(request: LoginRequest): Result<LoginResponse> = safeApiCall {
         client.post("/api/auth/login") {
             contentType(ContentType.Application.Json)
             setBody(request)
-        }.body()
+        }
     }
 
     override suspend fun refreshToken(request: RefreshTokenRequest): Result<RefreshTokenResponse> =
-        runCatching {
+        safeApiCall {
             client.post("/api/auth/refresh-token") {
                 contentType(ContentType.Application.Json)
                 setBody(request)
-            }.body()
+            }
         }
 }

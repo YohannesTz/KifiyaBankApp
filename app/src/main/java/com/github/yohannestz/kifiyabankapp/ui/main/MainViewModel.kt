@@ -1,7 +1,5 @@
 package com.github.yohannestz.kifiyabankapp.ui.main
 
-import android.content.Context
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.yohannestz.kifiyabankapp.data.repository.auth.AuthRepository
 import com.github.yohannestz.kifiyabankapp.data.repository.preferences.PreferenceRepository

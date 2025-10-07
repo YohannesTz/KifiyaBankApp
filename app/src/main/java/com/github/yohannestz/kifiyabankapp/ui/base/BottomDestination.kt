@@ -1,6 +1,5 @@
 package com.github.yohannestz.kifiyabankapp.ui.base
 
-import android.annotation.SuppressLint
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.material3.MaterialTheme

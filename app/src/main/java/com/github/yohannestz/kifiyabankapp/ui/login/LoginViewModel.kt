@@ -1,10 +1,14 @@
 package com.github.yohannestz.kifiyabankapp.ui.login
 
+import androidx.lifecycle.viewModelScope
+import com.github.yohannestz.kifiyabankapp.data.dto.ApiException
+import com.github.yohannestz.kifiyabankapp.data.dto.login.LoginRequest
 import com.github.yohannestz.kifiyabankapp.data.repository.auth.AuthRepository
 import com.github.yohannestz.kifiyabankapp.data.repository.preferences.PreferenceRepository
 import com.github.yohannestz.kifiyabankapp.ui.base.viewModel.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val preferenceRepository: PreferenceRepository,
@@ -61,10 +65,40 @@ class LoginViewModel(
     }
 
     override fun login() {
+        mutableUiState.update {
+            it.setLoading(true)
+        }
 
+        viewModelScope.launch {
+            val loginRequest = LoginRequest(
+                username = mutableUiState.value.username.current,
+                passwordHash = mutableUiState.value.password.current
+            )
+
+            authRepository.login(request = loginRequest).fold(
+                onSuccess = { loginResponse ->
+                    showMessage(loginResponse.message)
+                    setLoading(false)
+                },
+                onFailure = { error ->
+                    val message = when (error) {
+                        is ApiException -> error.apiError?.message ?: error.message
+                        else -> error.message ?: "Unknown error"
+                    }
+
+                    showMessage(message)
+                    setLoading(false)
+                }
+            )
+        }
     }
 
     override fun resetState() {
-
+        mutableUiState.update {
+            it.copy(
+                username = it.username.getUpdatedState(""),
+                password = it.password.getUpdatedState("")
+            )
+        }
     }
 }

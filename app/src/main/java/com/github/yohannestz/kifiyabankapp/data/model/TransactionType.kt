@@ -1,7 +1,7 @@
 package com.github.yohannestz.kifiyabankapp.data.model
 
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Serializable
 enum class TransactionType {

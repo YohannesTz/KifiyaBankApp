@@ -9,3 +9,28 @@ data class ApiResponse<T>(
     val error: String? = null,
     val statusCode: Int
 )
+
+@Serializable
+data class ApiError(
+    val timestamp: String? = null,
+    val status: Int? = null,
+    val error: String? = null,
+    val code: String? = null,
+    val message: String? = null,
+    val path: String? = null
+)
+
+@Serializable
+data class ApiErrorResponse(
+    val timestamp: String? = null,
+    val status: Int? = null,
+    val error: String? = null,
+    val code: String? = null,
+    val message: String? = null,
+    val path: String? = null
+)
+
+class ApiException(
+    override val message: String?,
+    val apiError: ApiErrorResponse? = null
+) : Exception(message)

@@ -59,6 +59,11 @@ abstract class BaseViewModel<S: UiState> : ViewModel(), UiEvent {
     }
 
     @Suppress("UNCHECKED_CAST")
+    override fun showMessage(message: String?, messageId: Long) {
+        mutableUiState.update { it.setMessage(message, messageId) as S }
+    }
+
+    @Suppress("UNCHECKED_CAST")
     override fun onMessageDisplayed() {
         mutableUiState.update { it.setMessage(null) as S }
     }

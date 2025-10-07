@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,10 +22,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -53,6 +47,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.yohannestz.kifiyabankapp.R
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
+import com.github.yohannestz.kifiyabankapp.ui.base.snackbar.GlobalSnackBarController
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -76,11 +71,10 @@ private fun LoginViewContent(
     navActionManager: NavActionManager
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
-    val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(uiState.message) {
-        uiState.message?.let {
-            snackBarHostState.showSnackbar(it)
+        uiState.message?.let { message ->
+            GlobalSnackBarController.info(message)
             event?.onMessageDisplayed()
         }
     }

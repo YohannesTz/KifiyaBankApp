@@ -14,8 +14,10 @@ data class LoginViewUiState(
         addCheck({ it.isNotEmpty() }, R.string.error_password_cannot_be_empty)
     },
     override val isLoading: Boolean = false,
-    override val message: String? = null
+    override val message: String? = null,
+    override val messageId: Long? = null
 ): UiState() {
     override fun setLoading(value: Boolean) = copy(isLoading = value)
     override fun setMessage(value: String?) = copy(message = value)
+    override fun setMessage(value: String?, messageId: Long) = copy(message = value, messageId = messageId)
 }
