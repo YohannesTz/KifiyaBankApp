@@ -5,6 +5,7 @@ import com.github.yohannestz.kifiyabankapp.data.dto.ApiException
 import com.github.yohannestz.kifiyabankapp.data.dto.login.LoginRequest
 import com.github.yohannestz.kifiyabankapp.data.repository.auth.AuthRepository
 import com.github.yohannestz.kifiyabankapp.data.repository.preferences.PreferenceRepository
+import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
 import com.github.yohannestz.kifiyabankapp.ui.base.viewModel.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -77,8 +78,15 @@ class LoginViewModel(
 
             authRepository.login(request = loginRequest).fold(
                 onSuccess = { loginResponse ->
+                    preferenceRepository.setAccessToken(loginResponse.accessToken)
+                    preferenceRepository.setRefreshToken(loginResponse.refreshToken)
+
+                    resetState()
+
                     showMessage(loginResponse.message)
                     setLoading(false)
+
+                    sendNavigationCommand(Route.Tab.Home)
                 },
                 onFailure = { error ->
                     val message = when (error) {

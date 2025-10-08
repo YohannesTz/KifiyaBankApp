@@ -28,8 +28,24 @@ class PreferenceRepositoryImpl (
         dataStore.setValue(LAST_TAB_KEY, tab)
     }
 
+    override val accessToken: Flow<String>
+        get() = dataStore.getValue(ACCESS_TOKEN_KEY, "")
+
+    override suspend fun setAccessToken(token: String) {
+        dataStore.setValue(ACCESS_TOKEN_KEY, token)
+    }
+
+    override val refreshToken: Flow<String>
+        get() = dataStore.getValue(REFRESH_TOKEN_KEY, "")
+
+    override suspend fun setRefreshToken(token: String) {
+        dataStore.setValue(REFRESH_TOKEN_KEY, token)
+    }
+
     companion object {
         val THEME_KEY = stringPreferencesKey("theme")
         val LAST_TAB_KEY = intPreferencesKey("last_tab")
+        val ACCESS_TOKEN_KEY = stringPreferencesKey("access_token")
+        val REFRESH_TOKEN_KEY = stringPreferencesKey("refresh_token")
     }
 }

@@ -57,6 +57,12 @@ fun LoginView(
     val viewModel: LoginViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    LaunchedEffect(viewModel) {
+        viewModel.navigationCommands.collect { route ->
+            navActionManager.navigateTo(route)
+        }
+    }
+
     LoginViewContent(
         uiState = uiState,
         event = viewModel,

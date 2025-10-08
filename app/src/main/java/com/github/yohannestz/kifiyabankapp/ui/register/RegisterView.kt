@@ -19,7 +19,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -43,6 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.yohannestz.kifiyabankapp.R
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
+import com.github.yohannestz.kifiyabankapp.ui.base.snackbar.GlobalSnackBarController
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -72,11 +72,10 @@ private fun RegisterViewContent(
     navActionManager: NavActionManager
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
-    val snackBarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(uiState.message) {
-        uiState.message?.let {
-            snackBarHostState.showSnackbar(it)
+        uiState.message?.let { message ->
+            GlobalSnackBarController.info(message)
             event?.onMessageDisplayed()
         }
     }

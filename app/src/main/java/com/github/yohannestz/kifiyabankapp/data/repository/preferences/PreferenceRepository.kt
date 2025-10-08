@@ -9,4 +9,10 @@ interface PreferenceRepository {
 
     val lastTab: Flow<Int>
     suspend fun setLastTab(tab: Int)
+
+    val accessToken: Flow<String>
+    suspend fun setAccessToken(token: String)
+
+    val refreshToken: Flow<String>
+    suspend fun setRefreshToken(token: String)
 }

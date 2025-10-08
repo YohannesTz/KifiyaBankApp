@@ -5,7 +5,6 @@ import com.github.yohannestz.kifiyabankapp.data.dto.ApiException
 import com.github.yohannestz.kifiyabankapp.data.dto.register.RegisterRequest
 import com.github.yohannestz.kifiyabankapp.data.model.CountryCode
 import com.github.yohannestz.kifiyabankapp.data.repository.auth.AuthRepository
-import com.github.yohannestz.kifiyabankapp.data.repository.preferences.PreferenceRepository
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
 import com.github.yohannestz.kifiyabankapp.ui.base.viewModel.BaseViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(
-    private val preferenceRepository: PreferenceRepository,
     private val authRepository: AuthRepository
 ): BaseViewModel<RegisterViewUiState>(), RegisterViewUiEvent {
     override val mutableUiState: MutableStateFlow<RegisterViewUiState> = MutableStateFlow(RegisterViewUiState())
@@ -156,6 +154,7 @@ class RegisterViewModel(
                     showMessage(registerResponse.message)
                     setLoading(false)
 
+                    resetState()
                     sendNavigationCommand(Route.Login)
                 },
                 onFailure = { error ->
@@ -172,6 +171,14 @@ class RegisterViewModel(
     }
 
     override fun resetState() {
-
+        mutableUiState.update {
+            it.copy(
+                firstName = it.firstName.getUpdatedState(""),
+                lastName = it.lastName.getUpdatedState(""),
+                userName = it.userName.getUpdatedState(""),
+                phoneNumber = it.phoneNumber.getUpdatedState(""),
+                password = it.password.getUpdatedState("")
+            )
+        }
     }
 }
