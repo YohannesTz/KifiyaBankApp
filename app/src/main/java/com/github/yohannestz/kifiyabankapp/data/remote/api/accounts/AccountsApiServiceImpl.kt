@@ -1,5 +1,6 @@
 package com.github.yohannestz.kifiyabankapp.data.remote.api.accounts
 
+import com.github.yohannestz.kifiyabankapp.data.dto.PageResponse
 import com.github.yohannestz.kifiyabankapp.data.dto.Pageable
 import com.github.yohannestz.kifiyabankapp.data.dto.account.AccountResponse
 import com.github.yohannestz.kifiyabankapp.data.dto.account.CreateAccountRequest
@@ -19,14 +20,16 @@ import io.ktor.http.parameters
 
 class AccountsApiServiceImpl(private val client: HttpClient) : AccountsApiService {
 
-    override suspend fun getAccounts(pageable: Pageable, accountNumber: String?): Result<Any> =
+    override suspend fun getAccounts(pageable: Pageable?, accountNumber: String?): Result<PageResponse<AccountResponse>> =
         safeApiCall {
             client.get("/api/accounts") {
                 contentType(ContentType.Application.Json)
                 parameters {
-                    append("page", pageable.page.toString())
-                    append("size", pageable.size.toString())
-                    pageable.sort.forEach { append("sort", it) }
+                    pageable.let {
+                        append("page", it?.page.toString())
+                        append("size", it?.size.toString())
+                        it?.sort?.forEach { append("sort", it) }
+                    }
                     accountNumber?.let { append("accountNumber", it) }
                 }
             }

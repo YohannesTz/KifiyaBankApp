@@ -1,6 +1,5 @@
 package com.github.yohannestz.kifiyabankapp.data.dto
 
-import com.github.yohannestz.kifiyabankapp.data.dto.transaction.TransactionResponse
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,6 +11,38 @@ data class Pageable(
 
 @Serializable
 data class SortObject(
+    val sorted: Boolean = false,
+    val empty: Boolean = true,
+    val unsorted: Boolean = true
+)
+
+@Serializable
+data class PageableObject(
+    val paged: Boolean = false,
+    val pageNumber: Int = 0,
+    val pageSize: Int = 20,
+    val offset: Long = 0,
+    val sort: SortObject = SortObject(),
+    val unpaged: Boolean = false
+)
+
+@Serializable
+data class PageResponse<T>(
+    val totalPages: Int = 1,
+    val totalElements: Long = 0,
+    val pageable: PageableObject = PageableObject(),
+    val size: Int = 20,
+    val content: List<T> = emptyList(),
+    val number: Int = 0,
+    val sort: SortObject = SortObject(),
+    val first: Boolean = true,
+    val last: Boolean = true,
+    val numberOfElements: Int = 0,
+    val empty: Boolean = false
+)
+
+@Serializable
+data class SortItem(
     val direction: String? = null,
     val nullHandling: String? = null,
     val ascending: Boolean? = null,
@@ -20,26 +51,16 @@ data class SortObject(
 )
 
 @Serializable
-data class PageableObject(
-    val paged: Boolean? = null,
-    val pageNumber: Int? = null,
-    val pageSize: Int? = null,
-    val offset: Long? = null,
-    val sort: List<SortObject>? = null,
-    val unpaged: Boolean? = null
-)
-
-@Serializable
-data class PageTransactionResponse(
-    val totalPages: Int,
-    val totalElements: Long,
-    val pageable: PageableObject? = null,
-    val size: Int,
-    val content: List<TransactionResponse>,
-    val number: Int,
-    val sort: List<SortObject>? = null,
-    val first: Boolean,
-    val last: Boolean,
-    val numberOfElements: Int,
-    val empty: Boolean
+data class PageObjectResponse<T>(
+    val totalPages: Int = 1,
+    val totalElements: Long = 0,
+    val pageable: PageableObject = PageableObject(),
+    val size: Int = 20,
+    val content: List<T> = emptyList(),
+    val number: Int = 0,
+    val sort: List<SortItem> = emptyList(),
+    val first: Boolean = true,
+    val last: Boolean = true,
+    val numberOfElements: Int = 0,
+    val empty: Boolean = false
 )

@@ -88,6 +88,7 @@ class MainActivity : ComponentActivity() {
                 val navActionManager = rememberNavActionManager(navController)
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+                val hasAnAccount by viewModel.hasAnAccount.collectAsStateWithLifecycle()
 
                 val windowSizeClass = calculateWindowSizeClass(this)
                 val windowWidthSizeClassType = windowSizeClass.widthSizeClass
@@ -112,6 +113,7 @@ class MainActivity : ComponentActivity() {
                                 lastTabOpened = lastTabOpened,
                                 saveLastTab = viewModel::saveLastTab,
                                 currentUserProfile = uiState.currentUserProfile,
+                                hasAnAccount = hasAnAccount,
                                 isLoading = uiState.isLoading,
                             )
 
@@ -168,6 +170,7 @@ fun MainView(
     lastTabOpened: Int,
     saveLastTab: (Int) -> Unit,
     currentUserProfile: User?,
+    hasAnAccount: Boolean,
     isLoading: Boolean,
 ) {
     val density = LocalDensity.current
@@ -202,12 +205,12 @@ fun MainView(
                 paddingValues = padding
             )
         } else {
-            val startDestination = if (currentUserProfile != null) {
+            val startDestination = /*if (currentUserProfile != null || hasAnAccount) {
                 BottomDestination.values
                     .getOrElse(lastTabOpened) { BottomDestination.Home }.route as Route
-            } else {
+            } else {*/
                 Route.Login
-            }
+            //}
 
             when (windowWidthSizeClass) {
                 WindowWidthSizeClass.Medium -> {

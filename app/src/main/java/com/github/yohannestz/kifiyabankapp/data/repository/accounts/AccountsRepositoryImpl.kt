@@ -1,5 +1,6 @@
 package com.github.yohannestz.kifiyabankapp.data.repository.accounts
 
+import com.github.yohannestz.kifiyabankapp.data.dto.PageResponse
 import com.github.yohannestz.kifiyabankapp.data.dto.Pageable
 import com.github.yohannestz.kifiyabankapp.data.dto.account.AccountResponse
 import com.github.yohannestz.kifiyabankapp.data.dto.account.CreateAccountRequest
@@ -14,7 +15,7 @@ class AccountsRepositoryImpl(
     private val service: AccountsApiService
 ) : AccountsRepository {
 
-    override suspend fun getAccounts(pageable: Pageable, accountNumber: String?): Result<Any> =
+    override suspend fun getAccounts(pageable: Pageable?, accountNumber: String?): Result<PageResponse<AccountResponse>> =
         service.getAccounts(pageable, accountNumber)
 
     override suspend fun getAccountById(accountId: Long): Result<AccountResponse> =

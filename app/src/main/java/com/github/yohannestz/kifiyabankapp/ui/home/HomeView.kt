@@ -1,5 +1,6 @@
 package com.github.yohannestz.kifiyabankapp.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -23,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
@@ -31,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.yohannestz.kifiyabankapp.R
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
+import com.github.yohannestz.kifiyabankapp.ui.base.snackbar.GlobalSnackBarController
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.AccountListItem
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.HomeHeader
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.ServiceItem
@@ -44,6 +48,12 @@ fun HomeView(
 ) {
     val viewModel: HomeViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel) {
+        viewModel.navigationCommands.collect { route ->
+            navActionManager.navigateTo(route)
+        }
+    }
 
     HomeViewContent(
         uiState = uiState,
@@ -60,27 +70,16 @@ private fun HomeViewContent(
     padding: PaddingValues,
     navActionManager: NavActionManager
 ) {
-    val snackBarHostState = remember { SnackbarHostState() }
-
     LaunchedEffect(uiState.message) {
-        uiState.message?.let {
-            snackBarHostState.showSnackbar(it)
+        Log.e("MESSAGE", uiState.message.toString())
+        uiState.message?.let { message ->
+            GlobalSnackBarController.info(message)
             event?.onMessageDisplayed()
         }
     }
 
-    val accounts = remember {
-        listOf(
-            Triple("Saving", "100000001011", 2000),
-            Triple("Checking", "100000001012", 5000),
-        )
-    }
-
-    val transactions = remember {
-        listOf(
-            Triple("Grocery Store", 1500, "Oct 4, 2025"),
-            Triple("Electricity Bill", 1200, "Oct 3, 2025"),
-        )
+    LaunchedEffect(Unit) {
+        event?.loadAccounts()
     }
 
     Box(
@@ -93,7 +92,7 @@ private fun HomeViewContent(
             userName = "Jane Foe",
             balance = 8500,
             isBalanceVisible = false,
-            onToggleBalance = {  }
+            onToggleBalance = { }
         )
 
         LazyColumn(
@@ -154,18 +153,44 @@ private fun HomeViewContent(
             }
 
             item {
-                AccountListContainer(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    accounts.forEachIndexed { index, (type, number, balance) ->
-                        AccountListItem(
-                            iconResId = R.drawable.ic_outline_account_circle_24,
-                            accountType = type,
-                            accountNumber = number,
-                            balance = balance,
-                            lastUpdated = "01/24",
-                            showDivider = index < accounts.size - 1
-                        )
+                when {
+                    uiState.isLoading -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(150.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+
+                    uiState.accounts.isEmpty() -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(150.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = stringResource(R.string.no_account_found))
+                        }
+                    }
+
+                    else -> {
+                        AccountListContainer(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            uiState.accounts.forEachIndexed { index, account ->
+                                AccountListItem(
+                                    iconResId = R.drawable.ic_outline_account_circle_24,
+                                    accountType = account.accountType.name,
+                                    accountNumber = account.accountNumber,
+                                    balance = account.balance.toInt(),
+                                    lastUpdated = "01/24",
+                                    showDivider = index < uiState.accounts.size - 1
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -191,16 +216,42 @@ private fun HomeViewContent(
             }
 
             item {
-                TransactionListContainer(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    transactions.forEachIndexed { index, (title, amount, date) ->
-                        TransactionListItem(
-                            iconResId = R.drawable.ic_round_sync_alt_24,
-                            title = title,
-                            spentAmount = amount,
-                            showDivider = index < transactions.size - 1
-                        )
+                when {
+                    uiState.isLoadingTransaction -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(150.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+
+                    uiState.recentTransactions.isEmpty() -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(150.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = stringResource(R.string.no_transaction_found))
+                        }
+                    }
+
+                    else -> {
+                        TransactionListContainer(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            uiState.recentTransactions.forEachIndexed { index, transaction ->
+                                TransactionListItem(
+                                    iconResId = R.drawable.ic_round_sync_alt_24,
+                                    title = transaction.accountId.toString(),
+                                    spentAmount = transaction.amount.toInt(),
+                                    showDivider = index < uiState.recentTransactions.size - 1
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -220,7 +271,11 @@ fun AccountListContainer(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+            .border(
+                1.dp,
+                MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
+                RoundedCornerShape(12.dp)
+            )
             .clip(RoundedCornerShape(12.dp))
     ) {
         content()
@@ -235,7 +290,11 @@ fun TransactionListContainer(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .border(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+            .border(
+                1.dp,
+                MaterialTheme.colorScheme.outline.copy(alpha = 0.4f),
+                RoundedCornerShape(12.dp)
+            )
             .clip(RoundedCornerShape(12.dp))
     ) {
         content()

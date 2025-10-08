@@ -1,5 +1,6 @@
 package com.github.yohannestz.kifiyabankapp.data.repository.accounts
 
+import com.github.yohannestz.kifiyabankapp.data.dto.PageResponse
 import com.github.yohannestz.kifiyabankapp.data.dto.Pageable
 import com.github.yohannestz.kifiyabankapp.data.dto.account.AccountResponse
 import com.github.yohannestz.kifiyabankapp.data.dto.account.CreateAccountRequest
@@ -10,7 +11,7 @@ import com.github.yohannestz.kifiyabankapp.data.dto.transfer.TransferRequest
 import com.github.yohannestz.kifiyabankapp.data.dto.transfer.TransferResponse
 
 interface AccountsRepository {
-    suspend fun getAccounts(pageable: Pageable, accountNumber: String? = null): Result<Any>
+    suspend fun getAccounts(pageable: Pageable? = null, accountNumber: String? = null): Result<PageResponse<AccountResponse>>
     suspend fun getAccountById(accountId: Long): Result<AccountResponse>
     suspend fun createAccount(request: CreateAccountRequest): Result<AccountResponse>
     suspend fun transfer(request: TransferRequest): Result<TransferResponse>

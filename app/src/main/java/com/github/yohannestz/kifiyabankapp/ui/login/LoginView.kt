@@ -144,6 +144,7 @@ private fun LoginViewContent(
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = uiState.username.current,
+                enabled = !uiState.isLoading,
                 onValueChange = { event?.setUsername(it) },
                 label = { Text(stringResource(R.string.username)) },
                 placeholder = { Text(stringResource(R.string.please_enter_your_username)) },
@@ -154,6 +155,8 @@ private fun LoginViewContent(
                     unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
                     focusedContainerColor = MaterialTheme.colorScheme.background,
                     unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    disabledContainerColor = MaterialTheme.colorScheme.background,
+                    disabledTextColor = MaterialTheme.colorScheme.onBackground
                 ),
                 trailingIcon = {
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
@@ -183,6 +186,7 @@ private fun LoginViewContent(
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = uiState.password.current,
+                enabled = !uiState.isLoading,
                 onValueChange = { event?.setPassword(it) },
                 label = { Text(stringResource(R.string.password)) },
                 placeholder = { Text(stringResource(R.string.please_enter_your_password)) },
@@ -198,6 +202,8 @@ private fun LoginViewContent(
                     unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
                     focusedContainerColor = MaterialTheme.colorScheme.background,
                     unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    disabledContainerColor = MaterialTheme.colorScheme.background,
+                    disabledTextColor = MaterialTheme.colorScheme.onBackground
                 ),
                 trailingIcon = {
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {

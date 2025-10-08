@@ -60,6 +60,7 @@ abstract class BaseViewModel<S: UiState> : ViewModel(), UiEvent {
 
     @Suppress("UNCHECKED_CAST")
     override fun showMessage(messageRes: Int, context: android.content.Context) {
+        Log.e("MESSAGE", "messageRes: $messageRes")
         mutableUiState.update { it.setMessage(context.getString(messageRes)) as S }
     }
 
@@ -75,11 +76,13 @@ abstract class BaseViewModel<S: UiState> : ViewModel(), UiEvent {
 
     @Suppress("UNCHECKED_CAST")
     override fun showMessage(message: String?) {
+        Log.e("MESSAGE", "message: $message")
         mutableUiState.update { it.setMessage(message) as S }
     }
 
     @Suppress("UNCHECKED_CAST")
     override fun showMessage(message: String?, messageId: Long) {
+        Log.e("MESSAGE", "message: $message messageId: $messageId")
         mutableUiState.update { it.setMessage(message, messageId) as S }
     }
 

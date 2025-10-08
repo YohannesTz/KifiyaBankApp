@@ -48,4 +48,6 @@
     <string name="good_evening">Good Evening!</string>
     <string name="etb_d">ETB %,d</string>
     <string name="dots">••••••••••••</string>
+    <string name="no_account_found">No Account found</string>
+    <string name="no_transaction_found">No transaction found</string>
 </resources>
