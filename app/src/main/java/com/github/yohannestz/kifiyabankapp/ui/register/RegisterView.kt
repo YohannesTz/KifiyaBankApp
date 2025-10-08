@@ -52,6 +52,12 @@ fun RegisterView(
     val viewModel: RegisterViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    LaunchedEffect(viewModel) {
+        viewModel.navigationCommands.collect { route ->
+            navActionManager.navigateTo(route)
+        }
+    }
+
     RegisterViewContent(
         uiState = uiState,
         event = viewModel,
@@ -192,7 +198,9 @@ private fun RegisterViewContent(
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = uiState.phoneNumber.current,
-                onValueChange = { event?.setPhoneNumber(it) },
+                onValueChange = {
+                    if (it.length <= 10) event?.setPhoneNumber(it)
+                },
                 label = { Text(stringResource(R.string.phone_number)) },
                 placeholder = { Text(stringResource(R.string.please_enter_your_phonenumber)) },
                 isError = uiState.phoneNumber.dirty,
@@ -209,6 +217,9 @@ private fun RegisterViewContent(
                             color = MaterialTheme.colorScheme.error
                         )
                     }
+                },
+                prefix = {
+                    Text(text = "+251")
                 }
             )
 

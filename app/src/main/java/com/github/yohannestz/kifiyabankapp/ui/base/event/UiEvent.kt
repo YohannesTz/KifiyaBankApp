@@ -1,6 +1,7 @@
 package com.github.yohannestz.kifiyabankapp.ui.base.event
 
 import android.content.Context
+import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
 
 interface UiEvent {
     fun showMessage(throwable: Throwable?)
@@ -8,5 +9,6 @@ interface UiEvent {
     fun showMessage(message: String?)
     fun showMessage(messageRes: Int, context: Context)
     fun showMessage(message: String?, messageId: Long)
+    fun sendNavigationCommand(route: Route)
     fun onMessageDisplayed()
 }
