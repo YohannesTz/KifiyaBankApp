@@ -1,7 +1,6 @@
 package com.github.yohannestz.kifiyabankapp.ui.transactions
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationVector1D
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -10,68 +9,84 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.yohannestz.kifiyabankapp.R
+import com.github.yohannestz.kifiyabankapp.data.model.Transaction
+import com.github.yohannestz.kifiyabankapp.data.model.TransactionType
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager
-import com.github.yohannestz.kifiyabankapp.ui.home.TransactionListContainer
+import com.github.yohannestz.kifiyabankapp.ui.base.snackbar.GlobalSnackBarController
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.TransactionListItem
 import com.github.yohannestz.kifiyabankapp.ui.transactions.composables.TransactionFilterButton
+import org.koin.androidx.compose.koinViewModel
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 
 @Composable
 fun TransactionsView(
-    isCompactScreen: Boolean,
     navActionManager: NavActionManager,
-    topBarHeightPx: Float,
-    topBarOffsetY: Animatable<Float, AnimationVector1D>,
     padding: PaddingValues,
 ) {
-   TransactionsViewContent(
-       isCompactScreen = isCompactScreen,
-       navActionManager = navActionManager,
-       topBarHeightPx = topBarHeightPx,
-       topBarOffsetY = topBarOffsetY,
-       padding = padding,
-   )
+    val viewModel: TransactionsViewModel = koinViewModel()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(viewModel) {
+        viewModel.navigationCommands.collect { route ->
+            navActionManager.navigateTo(route)
+        }
+    }
+
+    TransactionsViewContent(
+        padding = padding,
+        uiState = uiState,
+        event = viewModel
+    )
 }
 
 @Composable
 private fun TransactionsViewContent(
-    isCompactScreen: Boolean,
-    navActionManager: NavActionManager,
-    topBarHeightPx: Float,
-    topBarOffsetY: Animatable<Float, AnimationVector1D>,
     padding: PaddingValues,
+    uiState: TransactionsViewUiState,
+    event: TransactionsViewUiEvent?
 ) {
-    val selectedFilter = remember { mutableStateOf("All") }
+    val selectedFilter = uiState.selectedFilter
+    val context = LocalContext.current
 
-    val todayTransactions = remember {
-        listOf(
-            Triple("Grocery", -400, R.drawable.ic_outline_mobile_24),
-            Triple("IESCO Bill", -120, R.drawable.ic_outline_article_24)
-        )
+    LaunchedEffect(uiState.message) {
+        uiState.message?.let { message ->
+            GlobalSnackBarController.info(message)
+            event?.onMessageDisplayed()
+        }
     }
 
-    val yesterdayTransactions = remember {
-        listOf(
-            Triple("Fund Transferred", 1200, R.drawable.ic_round_sync_alt_24),
-            Triple("Mobile Bill", -235, R.drawable.ic_outline_mobile_24),
-            Triple("Salary", 6500, R.drawable.ic_outline_mobile_24),
-            Triple("Card Payment", -155, R.drawable.ic_outline_mobile_24)
-        )
+    val filteredTransactions = uiState.transactions.filter {
+        when (selectedFilter) {
+            TransactionFilter.ALL -> true
+            TransactionFilter.INCOME -> it.amount > 0
+            TransactionFilter.EXPENSE -> it.amount < 0
+        }
     }
 
     Box(
@@ -88,12 +103,11 @@ private fun TransactionsViewContent(
         ) {
             stickyHeader {
                 Column(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.background)
+                    modifier = Modifier.background(MaterialTheme.colorScheme.background)
                 ) {
                     Text(
-                        text = "Transactions",
-                        style = MaterialTheme.typography.titleLarge,
+                        text = stringResource(R.string.title_transactions),
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -101,91 +115,75 @@ private fun TransactionsViewContent(
                 }
             }
 
-            // --- Filter Section ---
             item {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Recent",
-                        style = MaterialTheme.typography.titleMedium
-                    )
-
-                    Text(
-                        text = "Select Time Range",
-                        style = MaterialTheme.typography.bodyMedium.copy(
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     TransactionFilterButton(
-                        text = "All",
-                        selected = selectedFilter.value == "All"
-                    ) { selectedFilter.value = "All" }
+                        text = stringResource(R.string.all),
+                        selected = selectedFilter == TransactionFilter.ALL
+                    ) { event?.onFilterChanged(TransactionFilter.ALL) }
 
                     TransactionFilterButton(
-                        text = "Income",
-                        iconRes = R.drawable.ic_round_sync_alt_24,
-                        selected = selectedFilter.value == "Income"
-                    ) { selectedFilter.value = "Income" }
+                        text = stringResource(R.string.income),
+                        iconRes = R.drawable.ic_outline_arrow_circle_down_24,
+                        tint = Color.Green.copy(alpha = 0.5f),
+                        selected = selectedFilter == TransactionFilter.INCOME
+                    ) { event?.onFilterChanged(TransactionFilter.INCOME) }
 
                     TransactionFilterButton(
-                        text = "Expense",
-                        iconRes = R.drawable.ic_round_sync_alt_24,
-                        selected = selectedFilter.value == "Expense"
-                    ) { selectedFilter.value = "Expense" }
+                        text = stringResource(R.string.expense),
+                        iconRes = R.drawable.ic_outline_arrow_circle_up_24,
+                        tint = Color.Red.copy(alpha = 0.5f),
+                        selected = selectedFilter == TransactionFilter.EXPENSE
+                    ) { event?.onFilterChanged(TransactionFilter.EXPENSE) }
                 }
+                Spacer(modifier = Modifier.height(16.dp))
             }
 
-            // --- Today Section ---
-            item {
-                Text(
-                    text = "Today",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                TransactionListContainer(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    todayTransactions.forEachIndexed { index, (title, amount, iconRes) ->
-                        TransactionListItem(
-                            iconResId = iconRes,
-                            title = title,
-                            spentAmount = amount,
-                            showDivider = index < todayTransactions.size - 1
-                        )
+            if (uiState.isLoading) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(150.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
                     }
                 }
-            }
+            } else if (filteredTransactions.isEmpty()) {
+                item {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = stringResource(R.string.no_transaction_found))
+                    }
+                }
+            } else {
+                val transactionsByDay = filteredTransactions.groupBy { it.dateString(context) }
 
-            // --- Yesterday Section ---
-            item {
-                Text(
-                    text = "Yesterday",
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                transactionsByDay.forEach { (dayLabel, transactions) ->
+                    item {
+                        Text(
+                            text = dayLabel,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
 
-                TransactionListContainer(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    yesterdayTransactions.forEachIndexed { index, (title, amount, iconRes) ->
+                    items(transactions.size) { index ->
+                        val transaction = transactions[index]
                         TransactionListItem(
-                            iconResId = iconRes,
-                            title = title,
-                            spentAmount = amount,
-                            showDivider = index < yesterdayTransactions.size - 1
+                            iconResId = transaction.iconRes(),
+                            title = transaction.displayTitle(),
+                            spentAmount = transaction.amount.toInt(),
+                            showDivider = index < transactions.size - 1
                         )
                     }
                 }
@@ -193,5 +191,50 @@ private fun TransactionsViewContent(
 
             item { Spacer(modifier = Modifier.height(64.dp)) }
         }
+    }
+}
+
+@Composable
+fun Transaction.displayTitle(): String {
+    return when (type) {
+        TransactionType.FUND_TRANSFER -> stringResource(R.string.transaction_fund_transfer)
+        TransactionType.TELLER_TRANSFER -> stringResource(R.string.transaction_teller_transfer)
+        TransactionType.ATM_WITHDRAWAL -> stringResource(R.string.transaction_atm_withdrawal)
+        TransactionType.TELLER_DEPOSIT -> stringResource(R.string.transaction_teller_deposit)
+        TransactionType.BILL_PAYMENT -> description
+            ?: stringResource(R.string.transaction_bill_payment)
+
+        TransactionType.ACCESS_FEE -> stringResource(R.string.transaction_access_fee)
+        TransactionType.PURCHASE -> description ?: stringResource(R.string.transaction_purchase)
+        TransactionType.REFUND -> stringResource(R.string.transaction_refund)
+        TransactionType.INTEREST_EARNED -> stringResource(R.string.transaction_interest_earned)
+        TransactionType.LOAN_PAYMENT -> stringResource(R.string.transaction_loan_payment)
+    }
+}
+
+fun Transaction.iconRes(): Int {
+    return when (type) {
+        TransactionType.FUND_TRANSFER -> R.drawable.ic_round_sync_alt_24
+        TransactionType.TELLER_TRANSFER -> R.drawable.ic_round_sync_alt_24
+        TransactionType.ATM_WITHDRAWAL -> R.drawable.ic_outline_mobile_24
+        TransactionType.TELLER_DEPOSIT -> R.drawable.ic_outline_article_24
+        TransactionType.BILL_PAYMENT -> R.drawable.ic_outline_article_24
+        TransactionType.ACCESS_FEE -> R.drawable.ic_outline_article_24
+        TransactionType.PURCHASE -> R.drawable.ic_outline_mobile_24
+        TransactionType.REFUND -> R.drawable.ic_outline_arrow_circle_down_24
+        TransactionType.INTEREST_EARNED -> R.drawable.ic_outline_arrow_circle_down_24
+        TransactionType.LOAN_PAYMENT -> R.drawable.ic_outline_arrow_circle_up_24
+    }
+}
+
+fun Transaction.dateString(context: Context): String {
+    val today = LocalDate.now()
+    val yesterday = today.minusDays(1)
+    val txDate = timestamp.toLocalDate()
+
+    return when (txDate) {
+        today -> context.getString(R.string.today)
+        yesterday -> context.getString(R.string.yesterday)
+        else -> txDate.format(DateTimeFormatter.ofPattern("MMM dd"))
     }
 }

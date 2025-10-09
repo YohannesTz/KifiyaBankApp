@@ -77,11 +77,8 @@ fun MainNavigation(
 
         composable<Route.Tab.Transactions> {
             TransactionsView(
-                isCompactScreen = isCompactScreen,
                 navActionManager = navActionManager,
-                padding = padding,
-                topBarHeightPx = topBarHeightPx,
-                topBarOffsetY = topBarOffsetY
+                padding = padding
             )
         }
 

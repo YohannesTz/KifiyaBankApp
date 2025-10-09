@@ -54,4 +54,21 @@
     <string name="no_pending_bills">No pending bills</string>
     <string name="due_account">Account: %1$s</string>
     <string name="etb_bill_amount">ETB %1$s</string>
+    <string name="recent">Recent</string>
+    <string name="select_time_range">Select Time Range</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="all">All</string>
+    <string name="income">Income</string>
+    <string name="expense">Expense</string>
+    <string name="transaction_fund_transfer">Transaction fund transfer</string>
+    <string name="transaction_atm_withdrawal">Transaction ATM withdrawal</string>
+    <string name="transaction_teller_transfer">Transaction teller transfer</string>
+    <string name="transaction_teller_deposit">Transaction teller deposit</string>
+    <string name="transaction_bill_payment">Transaction bill payment</string>
+    <string name="transaction_access_fee">Transaction access fee</string>
+    <string name="transaction_purchase">Transaction purchase</string>
+    <string name="transaction_refund">Transaction refund</string>
+    <string name="transaction_interest_earned">Transaction interest earned</string>
+    <string name="transaction_loan_payment">Transaction load payment</string>
 </resources>

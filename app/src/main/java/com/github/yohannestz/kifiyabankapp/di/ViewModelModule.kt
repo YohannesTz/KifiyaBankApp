@@ -5,6 +5,7 @@ import com.github.yohannestz.kifiyabankapp.ui.home.HomeViewModel
 import com.github.yohannestz.kifiyabankapp.ui.login.LoginViewModel
 import com.github.yohannestz.kifiyabankapp.ui.main.MainViewModel
 import com.github.yohannestz.kifiyabankapp.ui.register.RegisterViewModel
+import com.github.yohannestz.kifiyabankapp.ui.transactions.TransactionsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -14,4 +15,5 @@ val viewModelModule = module {
     viewModelOf(::RegisterViewModel)
     viewModelOf(::HomeViewModel)
     viewModelOf(::CardsViewModel)
+    viewModelOf(::TransactionsViewModel)
 }

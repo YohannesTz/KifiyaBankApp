@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 fun TransactionFilterButton(
     text: String,
     @DrawableRes iconRes: Int? = null,
+    tint: Color = MaterialTheme.colorScheme.onBackground,
     selected: Boolean,
     onClick: () -> Unit
 ) {
@@ -52,7 +53,7 @@ fun TransactionFilterButton(
                 painter = painterResource(id = iconRes),
                 contentDescription = null,
                 tint = if (selected) MaterialTheme.colorScheme.primary
-                else MaterialTheme.colorScheme.onSurfaceVariant,
+                else tint,
                 modifier = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.width(6.dp))

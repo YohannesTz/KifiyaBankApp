@@ -42,7 +42,6 @@ import com.github.yohannestz.kifiyabankapp.ui.home.composables.AccountListItem
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.HomeHeader
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.ServiceItem
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.TransactionListItem
-import kotlinx.coroutines.flow.MutableStateFlow
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -78,7 +77,6 @@ private fun HomeViewContent(
     var showCurrentBalance by remember { mutableStateOf(false) }
 
     LaunchedEffect(uiState.message) {
-        Log.e("MESSAGE", uiState.message.toString())
         uiState.message?.let { message ->
             GlobalSnackBarController.info(message)
             event?.onMessageDisplayed()
