@@ -8,18 +8,16 @@ import com.github.yohannestz.kifiyabankapp.data.model.User
 data class UserEntity(
     @PrimaryKey val id: Long,
     val username: String,
-    val firstName: String,
-    val lastName: String,
-    val email: String?,
-    val phoneNumber: String?,
+    val firstName: String? = null,
+    val lastName: String? = null,
+    val phoneNumber: String? = null,
     val lastUpdated: Long = System.currentTimeMillis()
 ) {
     fun toUser() = User(
         id = id,
         username = username,
-        firstName = firstName,
-        lastName = lastName,
-        email = email,
+        firstName = firstName ?: "No firstname",
+        lastName = lastName ?: "No lastname",
         phoneNumber = phoneNumber
     )
 }

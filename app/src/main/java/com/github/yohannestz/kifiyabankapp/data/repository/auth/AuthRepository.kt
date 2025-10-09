@@ -15,6 +15,7 @@ interface AuthRepository {
     suspend fun refreshToken(request: RefreshTokenRequest): Result<RefreshTokenResponse>
 
     suspend fun saveUser(user: UserEntity)
+    suspend fun upsertUser(user: UserEntity)
     suspend fun getCurrentUser(): UserEntity?
     suspend fun getCurrentUserFlow(): Flow<UserEntity?>
     suspend fun clearUserData()

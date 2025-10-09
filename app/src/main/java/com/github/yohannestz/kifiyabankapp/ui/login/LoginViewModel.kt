@@ -3,6 +3,7 @@ package com.github.yohannestz.kifiyabankapp.ui.login
 import androidx.lifecycle.viewModelScope
 import com.github.yohannestz.kifiyabankapp.data.dto.ApiException
 import com.github.yohannestz.kifiyabankapp.data.dto.login.LoginRequest
+import com.github.yohannestz.kifiyabankapp.data.local.entities.UserEntity
 import com.github.yohannestz.kifiyabankapp.data.repository.auth.AuthRepository
 import com.github.yohannestz.kifiyabankapp.data.repository.preferences.PreferenceRepository
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
@@ -81,8 +82,14 @@ class LoginViewModel(
                     preferenceRepository.setAccessToken(loginResponse.accessToken)
                     preferenceRepository.setRefreshToken(loginResponse.refreshToken)
 
-                    resetState()
+                    authRepository.saveUser(
+                        UserEntity(
+                            id = loginResponse.userId,
+                            username = loginResponse.username,
+                        )
+                    )
 
+                    resetState()
                     showMessage(loginResponse.message)
                     setLoading(false)
 

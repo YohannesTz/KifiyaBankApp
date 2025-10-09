@@ -29,6 +29,10 @@ class AuthRepositoryImpl(
         userDao.insertUser(user)
     }
 
+    override suspend fun upsertUser(user: UserEntity) {
+        userDao.upsertUser(user)
+    }
+
     override suspend fun getCurrentUser(): UserEntity? {
         return userDao.getFirstUser()
     }

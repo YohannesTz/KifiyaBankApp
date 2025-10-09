@@ -15,7 +15,7 @@ import com.github.yohannestz.kifiyabankapp.data.local.entities.UserEntity
         AccountEntity::class,
         TransactionEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

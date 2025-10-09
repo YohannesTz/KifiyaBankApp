@@ -16,6 +16,10 @@ class HomeViewModel(
     override val mutableUiState: MutableStateFlow<HomeViewUiState> =
         MutableStateFlow(HomeViewUiState())
 
+    init {
+        loadAccounts()
+    }
+
     override fun loadAccounts() {
         setLoading(true)
 

@@ -5,7 +5,6 @@ data class User(
     val username: String,
     val firstName: String,
     val lastName: String,
-    val email: String?,
     val phoneNumber: String?,
     val accessToken: String? = null,
     val refreshToken: String? = null

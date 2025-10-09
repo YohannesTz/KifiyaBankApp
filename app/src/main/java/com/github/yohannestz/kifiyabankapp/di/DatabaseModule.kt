@@ -11,7 +11,7 @@ val databaseModule = module {
             androidContext(),
             AppDatabase::class.java,
             "app_database"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     single { get<AppDatabase>().userDao() }

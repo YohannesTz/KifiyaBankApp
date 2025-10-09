@@ -24,7 +24,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,11 +36,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.yohannestz.kifiyabankapp.R
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
+import com.github.yohannestz.kifiyabankapp.ui.base.providers.LocalCurrentUser
 import com.github.yohannestz.kifiyabankapp.ui.base.snackbar.GlobalSnackBarController
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.AccountListItem
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.HomeHeader
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.ServiceItem
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.TransactionListItem
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -70,16 +74,15 @@ private fun HomeViewContent(
     padding: PaddingValues,
     navActionManager: NavActionManager
 ) {
+    val currentLocalUser = LocalCurrentUser.current
+    var showCurrentBalance by remember { mutableStateOf(false) }
+
     LaunchedEffect(uiState.message) {
         Log.e("MESSAGE", uiState.message.toString())
         uiState.message?.let { message ->
             GlobalSnackBarController.info(message)
             event?.onMessageDisplayed()
         }
-    }
-
-    LaunchedEffect(Unit) {
-        event?.loadAccounts()
     }
 
     Box(
@@ -89,10 +92,12 @@ private fun HomeViewContent(
     ) {
         HomeHeader(
             padding = padding,
-            userName = "Jane Foe",
-            balance = 8500,
-            isBalanceVisible = false,
-            onToggleBalance = { }
+            userName = currentLocalUser?.username ?: "Guest",
+            balance = (uiState.accounts.firstOrNull()?.balance ?: 0.0).toInt(),
+            isBalanceVisible = showCurrentBalance,
+            onToggleBalance = {
+                showCurrentBalance = !showCurrentBalance
+            }
         )
 
         LazyColumn(

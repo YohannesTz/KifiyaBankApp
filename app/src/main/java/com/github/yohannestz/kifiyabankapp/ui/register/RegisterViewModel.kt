@@ -3,6 +3,7 @@ package com.github.yohannestz.kifiyabankapp.ui.register
 import androidx.lifecycle.viewModelScope
 import com.github.yohannestz.kifiyabankapp.data.dto.ApiException
 import com.github.yohannestz.kifiyabankapp.data.dto.register.RegisterRequest
+import com.github.yohannestz.kifiyabankapp.data.local.entities.UserEntity
 import com.github.yohannestz.kifiyabankapp.data.model.CountryCode
 import com.github.yohannestz.kifiyabankapp.data.repository.auth.AuthRepository
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
@@ -153,7 +154,6 @@ class RegisterViewModel(
                 onSuccess = { registerResponse ->
                     showMessage(registerResponse.message)
                     setLoading(false)
-
                     resetState()
                     sendNavigationCommand(Route.Login)
                 },

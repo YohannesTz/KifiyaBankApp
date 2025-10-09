@@ -122,12 +122,20 @@ private fun RegisterViewContent(
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = uiState.firstName.current,
+                enabled = !uiState.isLoading,
                 onValueChange = { event?.setFirstName(it) },
                 label = { Text(stringResource(R.string.first_name)) },
                 placeholder = { Text(stringResource(R.string.please_enter_your_firstname)) },
                 isError = uiState.firstName.dirty,
                 singleLine = true,
-                colors = textFieldColors(),
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    disabledContainerColor = MaterialTheme.colorScheme.background,
+                    disabledTextColor = MaterialTheme.colorScheme.onBackground
+                ),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
@@ -147,12 +155,20 @@ private fun RegisterViewContent(
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = uiState.lastName.current,
+                enabled = !uiState.isLoading,
                 onValueChange = { event?.setLastName(it) },
                 label = { Text(stringResource(R.string.last_name)) },
                 placeholder = { Text(stringResource(R.string.please_enter_your_lastname)) },
                 isError = uiState.lastName.dirty,
                 singleLine = true,
-                colors = textFieldColors(),
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    disabledContainerColor = MaterialTheme.colorScheme.background,
+                    disabledTextColor = MaterialTheme.colorScheme.onBackground
+                ),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
@@ -172,12 +188,20 @@ private fun RegisterViewContent(
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = uiState.userName.current,
+                enabled = !uiState.isLoading,
                 onValueChange = { event?.setUserName(it) },
                 label = { Text(stringResource(R.string.username)) },
                 placeholder = { Text(stringResource(R.string.please_enter_your_username)) },
                 isError = uiState.userName.dirty,
                 singleLine = true,
-                colors = textFieldColors(),
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    disabledContainerColor = MaterialTheme.colorScheme.background,
+                    disabledTextColor = MaterialTheme.colorScheme.onBackground
+                ),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
@@ -197,6 +221,7 @@ private fun RegisterViewContent(
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = uiState.phoneNumber.current,
+                enabled = !uiState.isLoading,
                 onValueChange = {
                     if (it.length <= 10) event?.setPhoneNumber(it)
                 },
@@ -204,7 +229,14 @@ private fun RegisterViewContent(
                 placeholder = { Text(stringResource(R.string.please_enter_your_phonenumber)) },
                 isError = uiState.phoneNumber.dirty,
                 singleLine = true,
-                colors = textFieldColors(),
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    disabledContainerColor = MaterialTheme.colorScheme.background,
+                    disabledTextColor = MaterialTheme.colorScheme.onBackground
+                ),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Phone,
                     imeAction = ImeAction.Next
@@ -227,6 +259,7 @@ private fun RegisterViewContent(
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = uiState.password.current,
+                enabled = !uiState.isLoading,
                 onValueChange = { event?.setPassword(it) },
                 label = { Text(stringResource(R.string.password)) },
                 placeholder = { Text(stringResource(R.string.please_enter_your_password)) },
@@ -237,7 +270,14 @@ private fun RegisterViewContent(
                     imeAction = ImeAction.Done
                 ),
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                colors = textFieldColors(),
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    disabledContainerColor = MaterialTheme.colorScheme.background,
+                    disabledTextColor = MaterialTheme.colorScheme.onBackground
+                ),
                 supportingText = {
                     if (uiState.password.dirty) {
                         Text(
