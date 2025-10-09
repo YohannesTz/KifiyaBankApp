@@ -44,7 +44,7 @@ fun MainNavigation(
         },
         exitTransition = {
             slideOutOfContainer(
-                AnimatedContentTransitionScope.SlideDirection.Start,
+                AnimatedContentTransitionScope.SlideDirection.End,
                 animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
             )
         },
