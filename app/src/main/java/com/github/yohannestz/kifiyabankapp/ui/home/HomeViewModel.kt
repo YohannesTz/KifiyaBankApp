@@ -35,6 +35,10 @@ class HomeViewModel(
                         )
                     }
 
+                    accountsRepository.saveAccounts(
+                        bankAccounts
+                    )
+
                     loadTransactions()
                 },
                 onFailure = { error ->

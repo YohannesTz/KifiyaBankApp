@@ -50,4 +50,8 @@
     <string name="dots">••••••••••••</string>
     <string name="no_account_found">No Account found</string>
     <string name="no_transaction_found">No transaction found</string>
+    <string name="recent_bills">Recent Bills</string>
+    <string name="no_pending_bills">No pending bills</string>
+    <string name="due_account">Account: %1$s</string>
+    <string name="etb_bill_amount">ETB %1$s</string>
 </resources>

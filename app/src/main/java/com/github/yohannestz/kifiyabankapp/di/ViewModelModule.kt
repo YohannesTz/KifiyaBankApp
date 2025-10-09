@@ -1,5 +1,6 @@
 package com.github.yohannestz.kifiyabankapp.di
 
+import com.github.yohannestz.kifiyabankapp.ui.cards.CardsViewModel
 import com.github.yohannestz.kifiyabankapp.ui.home.HomeViewModel
 import com.github.yohannestz.kifiyabankapp.ui.login.LoginViewModel
 import com.github.yohannestz.kifiyabankapp.ui.main.MainViewModel
@@ -12,4 +13,5 @@ val viewModelModule = module {
     viewModelOf(::LoginViewModel)
     viewModelOf(::RegisterViewModel)
     viewModelOf(::HomeViewModel)
+    viewModelOf(::CardsViewModel)
 }

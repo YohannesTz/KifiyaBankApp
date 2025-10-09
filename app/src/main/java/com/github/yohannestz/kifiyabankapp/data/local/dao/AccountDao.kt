@@ -18,6 +18,9 @@ interface AccountDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAccounts(accounts: List<AccountEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAccounts(accounts: List<AccountEntity>)
+
     @Update
     suspend fun updateAccount(account: AccountEntity)
 
@@ -38,6 +41,9 @@ interface AccountDao {
 
     @Query("SELECT * FROM accounts")
     fun getAllAccountsAsFlow(): Flow<List<AccountEntity>>
+
+    @Query("SELECT * FROM accounts")
+    suspend fun getAllAccounts(): List<AccountEntity>
 
     @Query("SELECT * FROM accounts WHERE userId = :userId")
     fun getAccountsByUserIdAsFlow(userId: Long): Flow<List<AccountEntity>>

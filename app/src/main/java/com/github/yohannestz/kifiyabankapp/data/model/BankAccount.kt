@@ -9,7 +9,7 @@ data class BankAccount(
     val userId: Long,
     val accountType: AccountType
 ) {
-    fun toEntity() = AccountEntity(
+    fun toAccountEntity() = AccountEntity(
         id = id,
         accountNumber = accountNumber,
         balance = balance,

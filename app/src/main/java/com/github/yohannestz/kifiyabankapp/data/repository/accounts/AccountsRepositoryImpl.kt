@@ -9,13 +9,39 @@ import com.github.yohannestz.kifiyabankapp.data.dto.billpayment.BillPaymentRespo
 import com.github.yohannestz.kifiyabankapp.data.dto.transaction.TransactionResponse
 import com.github.yohannestz.kifiyabankapp.data.dto.transfer.TransferRequest
 import com.github.yohannestz.kifiyabankapp.data.dto.transfer.TransferResponse
+import com.github.yohannestz.kifiyabankapp.data.local.dao.AccountDao
+import com.github.yohannestz.kifiyabankapp.data.local.entities.AccountEntity
+import com.github.yohannestz.kifiyabankapp.data.model.BankAccount
 import com.github.yohannestz.kifiyabankapp.data.remote.api.accounts.AccountsApiService
+import kotlinx.coroutines.flow.Flow
 
 class AccountsRepositoryImpl(
+    private val accountsDao: AccountDao,
     private val service: AccountsApiService
 ) : AccountsRepository {
 
-    override suspend fun getAccounts(pageable: Pageable?, accountNumber: String?): Result<PageResponse<AccountResponse>> =
+    override suspend fun getLocalAccounts(): Result<List<AccountEntity>> {
+        return try {
+            val accounts = accountsDao.getAllAccounts()
+            Result.success(accounts)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getLocalAccountsFlow(): Result<Flow<List<AccountEntity>>> {
+        return try {
+            val accountsFlow = accountsDao.getAllAccountsAsFlow()
+            Result.success(accountsFlow)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getAccounts(
+        pageable: Pageable?,
+        accountNumber: String?
+    ): Result<PageResponse<AccountResponse>> =
         service.getAccounts(pageable, accountNumber)
 
     override suspend fun getAccountById(accountId: Long): Result<AccountResponse> =
@@ -29,6 +55,10 @@ class AccountsRepositoryImpl(
 
     override suspend fun payBill(request: BillPaymentRequest): Result<BillPaymentResponse> =
         service.payBill(request)
+
+    override suspend fun saveAccounts(accounts: List<BankAccount>) {
+        accountsDao.upsertAccounts(accounts.map { it.toAccountEntity() })
+    }
 
     override suspend fun getTransferDetails(transactionId: Long): Result<TransactionResponse> =
         service.getTransferDetails(transactionId)

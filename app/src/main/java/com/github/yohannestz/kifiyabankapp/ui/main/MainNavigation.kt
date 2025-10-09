@@ -70,11 +70,8 @@ fun MainNavigation(
 
         composable<Route.Tab.Cards> {
             CardsView(
-                isCompactScreen = isCompactScreen,
                 navActionManager = navActionManager,
-                padding = padding,
-                topBarHeightPx = topBarHeightPx,
-                topBarOffsetY = topBarOffsetY
+                padding = padding
             )
         }
 
