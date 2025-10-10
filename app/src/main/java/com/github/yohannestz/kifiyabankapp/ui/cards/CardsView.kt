@@ -77,6 +77,10 @@ private fun CardsViewContent(
         }
     }
 
+    LaunchedEffect(Unit) {
+        event?.loadAccounts()
+    }
+
     if (uiState.showAccountCreationDialog) {
         AccountCreationSheet(
             uiState = uiState,
@@ -216,7 +220,7 @@ private fun SettingsSection(
         HorizontalDivider()
 
         SettingsItem(
-            iconRes = R.drawable.ic_outline_article_24,
+            iconRes = R.drawable.ic_round_pin_24,
             title = stringResource(R.string.change_pin),
             onClick = onChangePinClick
         )
@@ -224,7 +228,7 @@ private fun SettingsSection(
         HorizontalDivider()
 
         SettingsItem(
-            iconRes = R.drawable.ic_outline_article_24,
+            iconRes = R.drawable.ic_round_credit_card_off_24,
             title = stringResource(R.string.remove_card),
             onClick = onRemoveCardClick
         )

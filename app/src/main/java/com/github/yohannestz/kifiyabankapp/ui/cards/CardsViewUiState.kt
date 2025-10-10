@@ -17,9 +17,9 @@ data class CardsViewUiState(
         )
     },
     val selectedAccountType: AccountType? = null,
+    val showAccountCreationDialog: Boolean = false,
     val bills: List<BillPaymentResponse> = emptyList(),
     val accounts: List<BankAccount> = emptyList(),
-    val showAccountCreationDialog: Boolean = false,
     val isLoadingBills: Boolean = false,
     val isAddingAccount: Boolean = false,
     override val isLoading: Boolean = false,

@@ -89,4 +89,8 @@
     <string name="fixed_time_deposit">Fixed Time Deposit</string>
     <string name="special_blocked_account">Special Blocked Account</string>
     <string name="etb_currency">ETB</string>
+    <string name="total_balance">Total Balance</string>
+    <string name="individual_accounts">Individual Accounts</string>
+    <string name="guest">Guest</string>
+    <string name="recharge_is_not_available_at_the_moment">Recharge is not available at the moment</string>
 </resources>

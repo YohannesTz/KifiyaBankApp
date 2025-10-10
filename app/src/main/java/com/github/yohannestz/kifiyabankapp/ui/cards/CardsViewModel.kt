@@ -18,7 +18,6 @@ class CardsViewModel(
         MutableStateFlow(CardsViewUiState())
 
     init {
-        loadAccounts()
         loadBills()
     }
 
@@ -37,7 +36,13 @@ class CardsViewModel(
                     }
                 },
                 onFailure = {
+                    val message = when (it) {
+                        is ApiException -> it.apiError?.message ?: it.message
+                        else -> it.message ?: "Unknown error"
+                    }
 
+                    showMessage(message)
+                    setLoading(false)
                 }
             )
         }
@@ -70,7 +75,6 @@ class CardsViewModel(
     }
 
     override fun createAccount() {
-        Timber.e("creatAccount was clicked")
         mutableUiState.update {
             it.copy(
                 isAddingAccount = true

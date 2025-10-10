@@ -2,6 +2,7 @@ package com.github.yohannestz.kifiyabankapp.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,9 +13,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.yohannestz.kifiyabankapp.R
@@ -36,7 +40,9 @@ import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
 import com.github.yohannestz.kifiyabankapp.ui.base.providers.LocalCurrentUser
 import com.github.yohannestz.kifiyabankapp.ui.base.snackbar.GlobalSnackBarController
+import com.github.yohannestz.kifiyabankapp.ui.cards.composables.AccountCreationSheet
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.AccountListItem
+import com.github.yohannestz.kifiyabankapp.ui.home.composables.HomeAccountCreationSheet
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.HomeHeader
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.ServiceItem
 import com.github.yohannestz.kifiyabankapp.ui.home.composables.TransactionListItem
@@ -74,11 +80,20 @@ private fun HomeViewContent(
     val currentLocalUser = LocalCurrentUser.current
     var showCurrentBalance by remember { mutableStateOf(false) }
 
+    val rechargeIsNotSupported = stringResource(R.string.recharge_is_not_available_at_the_moment)
+
     LaunchedEffect(uiState.message) {
         uiState.message?.let { message ->
             GlobalSnackBarController.info(message)
             event?.onMessageDisplayed()
         }
+    }
+
+    if (uiState.showAccountCreationDialog) {
+        HomeAccountCreationSheet(
+            uiState = uiState,
+            event = event
+        ) { event?.showAccountCreationDialog(false) }
     }
 
     Box(
@@ -88,8 +103,8 @@ private fun HomeViewContent(
     ) {
         HomeHeader(
             padding = padding,
-            userName = currentLocalUser?.username ?: "Guest",
-            balance = (uiState.accounts.firstOrNull()?.balance ?: 0.0).toInt(),
+            userName = currentLocalUser?.username ?: stringResource(R.string.guest),
+            accounts = uiState.accounts,
             isBalanceVisible = showCurrentBalance,
             onToggleBalance = {
                 showCurrentBalance = !showCurrentBalance
@@ -99,7 +114,7 @@ private fun HomeViewContent(
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .offset(y = 180.dp)
+                .offset(y = 200.dp)
                 .clip(RoundedCornerShape(topStart = 48.dp, topEnd = 48.dp))
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 16.dp, vertical = 24.dp),
@@ -125,12 +140,16 @@ private fun HomeViewContent(
                     ServiceItem(
                         iconResId = R.drawable.ic_outline_mobile_24,
                         titleResId = R.string.recharge,
-                    ) { }
+                    ) {
+                        event?.showMessage(rechargeIsNotSupported)
+                    }
 
                     ServiceItem(
                         iconResId = R.drawable.ic_outline_more_horiz_24,
                         titleResId = R.string.more,
-                    ) { }
+                    ) {
+                        event?.showAccountCreationDialog(true)
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -147,7 +166,12 @@ private fun HomeViewContent(
                     Spacer(modifier = Modifier.weight(1f))
                     Text(
                         text = stringResource(R.string.view_all),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            textDecoration = TextDecoration.Underline
+                        ),
+                        modifier = Modifier.clickable {
+                            navActionManager.navigateTo(Route.Tab.Cards)
+                        }
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -179,17 +203,21 @@ private fun HomeViewContent(
 
                     else -> {
                         AccountListContainer(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = 200.dp)
                         ) {
-                            uiState.accounts.forEachIndexed { index, account ->
-                                AccountListItem(
-                                    iconResId = R.drawable.ic_outline_account_circle_24,
-                                    accountType = account.accountType.name,
-                                    accountNumber = account.accountNumber,
-                                    balance = account.balance.toInt(),
-                                    lastUpdated = "01/24",
-                                    showDivider = index < uiState.accounts.size - 1
-                                )
+                            LazyColumn {
+                                items(uiState.accounts) { account ->
+                                    AccountListItem(
+                                        iconResId = R.drawable.ic_outline_account_circle_24,
+                                        accountType = stringResource(account.accountType.titleResId),
+                                        accountNumber = account.accountNumber,
+                                        balance = account.balance.toInt(),
+                                        lastUpdated = "01/24",
+                                        showDivider = account != uiState.accounts.last()
+                                    )
+                                }
                             }
                         }
                     }
@@ -209,7 +237,12 @@ private fun HomeViewContent(
                     Spacer(modifier = Modifier.weight(1f))
                     Text(
                         text = stringResource(R.string.view_all),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            textDecoration = TextDecoration.Underline
+                        ),
+                        modifier = Modifier.clickable {
+                            navActionManager.navigateTo(Route.Tab.Transactions)
+                        }
                     )
                 }
 
@@ -242,15 +275,19 @@ private fun HomeViewContent(
 
                     else -> {
                         TransactionListContainer(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = 300.dp)
                         ) {
-                            uiState.recentTransactions.forEachIndexed { index, transaction ->
-                                TransactionListItem(
-                                    iconResId = R.drawable.ic_round_sync_alt_24,
-                                    title = transaction.accountId.toString(),
-                                    spentAmount = transaction.amount.toInt(),
-                                    showDivider = index < uiState.recentTransactions.size - 1
-                                )
+                            LazyColumn {
+                                items(uiState.recentTransactions) { transaction ->
+                                    TransactionListItem(
+                                        iconResId = R.drawable.ic_round_sync_alt_24,
+                                        title = transaction.accountId.toString(),
+                                        spentAmount = transaction.amount.toInt(),
+                                        showDivider = transaction != uiState.recentTransactions.last()
+                                    )
+                                }
                             }
                         }
                     }
