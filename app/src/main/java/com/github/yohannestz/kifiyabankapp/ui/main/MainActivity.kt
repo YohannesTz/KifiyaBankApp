@@ -129,7 +129,7 @@ class MainActivity : ComponentActivity() {
                                 } else {
                                     SystemBarStyle.light(
                                         android.graphics.Color.TRANSPARENT,
-                                        light_scrim.toArgb()
+                                        android.graphics.Color.TRANSPARENT
                                     )
                                 }
 

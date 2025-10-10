@@ -71,4 +71,22 @@
     <string name="transaction_refund">Transaction refund</string>
     <string name="transaction_interest_earned">Transaction interest earned</string>
     <string name="transaction_loan_payment">Transaction load payment</string>
+    <string name="view_statement">View Statement</string>
+    <string name="change_pin">Change Pin</string>
+    <string name="remove_card">Remove Card</string>
+    <string name="add_account">Add Account</string>
+    <string name="cards_balance_amount">ETB %1$s</string>
+    <string name="error_deposit_too_low">Deposit must be above 10 ETB</string>
+    <string name="account_type">Account Type</string>
+    <string name="please_select_account_type">Please select account type</string>
+    <string name="deposit">Deposit</string>
+    <string name="please_enter_deposit_amount">Please enter deposit amount</string>
+    <string name="create_account">Create Account</string>
+    <string name="checking">Checking</string>
+    <string name="saving">Saving</string>
+    <string name="money_market">Money Market</string>
+    <string name="individual_retirement_account">Individual Retierment Account</string>
+    <string name="fixed_time_deposit">Fixed Time Deposit</string>
+    <string name="special_blocked_account">Special Blocked Account</string>
+    <string name="etb_currency">ETB</string>
 </resources>

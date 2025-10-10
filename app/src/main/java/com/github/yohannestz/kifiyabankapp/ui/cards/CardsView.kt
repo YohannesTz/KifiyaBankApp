@@ -2,18 +2,22 @@ package com.github.yohannestz.kifiyabankapp.ui.cards
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,7 +34,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.github.yohannestz.kifiyabankapp.R
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager
 import com.github.yohannestz.kifiyabankapp.ui.base.snackbar.GlobalSnackBarController
-import com.github.yohannestz.kifiyabankapp.ui.cards.composables.PaymentCard
+import com.github.yohannestz.kifiyabankapp.ui.cards.composables.AccountCreationSheet
+import com.github.yohannestz.kifiyabankapp.ui.cards.composables.CardsHorizontalPager
 import com.github.yohannestz.kifiyabankapp.ui.cards.composables.PaymentRequestItem
 import com.github.yohannestz.kifiyabankapp.ui.cards.composables.SettingsItem
 import org.koin.androidx.compose.koinViewModel
@@ -57,17 +62,26 @@ fun CardsView(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CardsViewContent(
     uiState: CardsViewUiState,
     event: CardsViewUiEvent?,
     padding: PaddingValues,
 ) {
+
     LaunchedEffect(uiState.message) {
         uiState.message?.let { message ->
             GlobalSnackBarController.info(message)
             event?.onMessageDisplayed()
         }
+    }
+
+    if (uiState.showAccountCreationDialog) {
+        AccountCreationSheet(
+            uiState = uiState,
+            event = event
+        ) { event?.showAccountCreationDialog(false) }
     }
 
     Box(
@@ -99,29 +113,27 @@ private fun CardsViewContent(
                 ) {
                     Spacer(Modifier.height(12.dp))
 
-                    Text(
-                        text = stringResource(R.string.my_accounts),
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = stringResource(R.string.my_accounts),
+                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                        )
+
+                        Spacer(
+                            modifier = Modifier.width(8.dp)
+                        )
+                    }
 
                     Spacer(Modifier.height(16.dp))
 
-                    uiState.accounts.forEach { account ->
-                        PaymentCard(
-                            cardNumber = maskAccountNumber(account.accountNumber),
-                            availableBalance = "$${
-                                String.format(
-                                    Locale.ROOT,
-                                    "%.2f",
-                                    account.balance
-                                )
-                            }",
-                            expiry = "",
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        Spacer(Modifier.height(16.dp))
-                    }
+                    CardsHorizontalPager(
+                        accounts = uiState.accounts,
+                        modifier = Modifier.fillMaxWidth()
+                    )
 
                     if (uiState.bills.isNotEmpty()) {
                         Text(
@@ -157,7 +169,20 @@ private fun CardsViewContent(
 
                     Spacer(Modifier.height(24.dp))
 
-                    SettingsSection()
+                    SettingsSection(
+                        onViewStatementClick = {
+
+                        },
+                        onChangePinClick = {
+
+                        },
+                        onRemoveCardClick = {
+
+                        },
+                        onAddAccountClick = {
+                            event?.showAccountCreationDialog(true)
+                        }
+                    )
                 }
             }
         }
@@ -165,7 +190,12 @@ private fun CardsViewContent(
 }
 
 @Composable
-private fun SettingsSection() {
+private fun SettingsSection(
+    onViewStatementClick: () -> Unit = {},
+    onChangePinClick: () -> Unit = {},
+    onRemoveCardClick: () -> Unit = {},
+    onAddAccountClick: () -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -179,28 +209,32 @@ private fun SettingsSection() {
     ) {
         SettingsItem(
             iconRes = R.drawable.ic_outline_article_24,
-            title = "View Statement"
-        ) { /* Handle click */ }
+            title = stringResource(R.string.view_statement),
+            onClick = onViewStatementClick
+        )
 
         HorizontalDivider()
 
         SettingsItem(
             iconRes = R.drawable.ic_outline_article_24,
-            title = "Change Pin"
-        ) { /* Handle click */ }
+            title = stringResource(R.string.change_pin),
+            onClick = onChangePinClick
+        )
 
         HorizontalDivider()
 
         SettingsItem(
             iconRes = R.drawable.ic_outline_article_24,
-            title = "Remove Card"
-        ) { /* Handle click */ }
+            title = stringResource(R.string.remove_card),
+            onClick = onRemoveCardClick
+        )
+
+        HorizontalDivider()
+
+        SettingsItem(
+            iconRes = R.drawable.ic_round_add_24,
+            title = stringResource(R.string.add_account),
+            onClick = onAddAccountClick
+        )
     }
-}
-
-private fun maskAccountNumber(accountNumber: String): String {
-    return if (accountNumber.length >= 4)
-        "**** **** **** ${accountNumber.takeLast(4)}"
-    else
-        accountNumber
 }

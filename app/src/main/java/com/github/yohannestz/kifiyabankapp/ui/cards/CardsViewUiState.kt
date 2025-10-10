@@ -1,15 +1,27 @@
 package com.github.yohannestz.kifiyabankapp.ui.cards
 
 import androidx.compose.runtime.Immutable
+import com.github.yohannestz.kifiyabankapp.R
 import com.github.yohannestz.kifiyabankapp.data.dto.billpayment.BillPaymentResponse
+import com.github.yohannestz.kifiyabankapp.data.model.AccountType
 import com.github.yohannestz.kifiyabankapp.data.model.BankAccount
+import com.github.yohannestz.kifiyabankapp.ui.base.state.TextEditorState
 import com.github.yohannestz.kifiyabankapp.ui.base.state.UiState
 
 @Immutable
 data class CardsViewUiState(
+    val deposit: TextEditorState<String> = TextEditorState("").apply {
+        addCheck(
+            { it.toDoubleOrNull()?.let { value -> value >= 10.0 } ?: false },
+            R.string.error_deposit_too_low
+        )
+    },
+    val selectedAccountType: AccountType? = null,
     val bills: List<BillPaymentResponse> = emptyList(),
     val accounts: List<BankAccount> = emptyList(),
+    val showAccountCreationDialog: Boolean = false,
     val isLoadingBills: Boolean = false,
+    val isAddingAccount: Boolean = false,
     override val isLoading: Boolean = false,
     override val message: String? = null,
     override val messageId: Long? = null
