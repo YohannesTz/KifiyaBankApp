@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
+import com.github.yohannestz.kifiyabankapp.ui.base.navigation.toRoute
 import com.github.yohannestz.kifiyabankapp.ui.cards.CardsView
 import com.github.yohannestz.kifiyabankapp.ui.home.HomeView
 import com.github.yohannestz.kifiyabankapp.ui.login.LoginView
@@ -32,20 +33,46 @@ fun MainNavigation(
     topBarHeightPx: Float,
     topBarOffsetY: Animatable<Float, AnimationVector1D>,
 ) {
+    val tabOrder = listOf(
+        Route.Tab.Home,
+        Route.Tab.Cards,
+        Route.Tab.Transactions,
+        Route.Tab.Profile
+    )
+
+    fun getSlideDirection(from: Route?, to: Route?, isTab: Boolean): AnimatedContentTransitionScope.SlideDirection {
+        return if (isTab) {
+            if (tabOrder.indexOf(from) < tabOrder.indexOf(to)) {
+                AnimatedContentTransitionScope.SlideDirection.Start
+            } else {
+                AnimatedContentTransitionScope.SlideDirection.End
+            }
+        } else {
+            AnimatedContentTransitionScope.SlideDirection.Start
+        }
+    }
+
+
     NavHost(
         navController = navController,
         startDestination = startDestination,
         modifier = modifier,
         enterTransition = {
+            val from = initialState.destination.route?.toRoute()
+            val to = targetState.destination.route?.toRoute()
+            val isTab = to is Route.Tab
             slideIntoContainer(
-                AnimatedContentTransitionScope.SlideDirection.Start,
-                animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+                getSlideDirection(from, to, isTab),
+                spring(stiffness = Spring.StiffnessMediumLow)
             )
         },
         exitTransition = {
+            val from = initialState.destination.route?.toRoute()
+            val to = targetState.destination.route?.toRoute()
+            val isTab = from is Route.Tab
             slideOutOfContainer(
-                AnimatedContentTransitionScope.SlideDirection.End,
-                animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+                if (isTab) getSlideDirection(from, to, isTab) else AnimatedContentTransitionScope.SlideDirection.End,
+                spring(stiffness = Spring.StiffnessMediumLow)
             )
         },
         popEnterTransition = {
