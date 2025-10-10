@@ -8,6 +8,7 @@ import com.github.yohannestz.kifiyabankapp.data.repository.preferences.Preferenc
 import com.github.yohannestz.kifiyabankapp.data.repository.preferences.PreferenceRepositoryImpl
 import com.github.yohannestz.kifiyabankapp.data.repository.transaction.TransactionsRepository
 import com.github.yohannestz.kifiyabankapp.data.repository.transaction.TransactionsRepositoryImpl
+import com.github.yohannestz.kifiyabankapp.utils.jwt.TokenManager
 import org.koin.dsl.module
 
 val repositoryModule = module {
@@ -15,4 +16,5 @@ val repositoryModule = module {
     single<AccountsRepository> { AccountsRepositoryImpl(get(), get()) }
     single<TransactionsRepository> { TransactionsRepositoryImpl(get()) }
     single<PreferenceRepository> { PreferenceRepositoryImpl(get()) }
+    single { TokenManager(get(), get(), get()) }
 }

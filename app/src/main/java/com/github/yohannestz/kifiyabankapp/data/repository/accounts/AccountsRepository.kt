@@ -24,4 +24,5 @@ interface AccountsRepository {
     suspend fun saveAccounts(accounts: List<BankAccount>)
     suspend fun getTransferDetails(transactionId: Long): Result<TransactionResponse>
     suspend fun getBillPaymentDetails(transactionId: Long): Result<TransactionResponse>
+    suspend fun clearAccountData()
 }

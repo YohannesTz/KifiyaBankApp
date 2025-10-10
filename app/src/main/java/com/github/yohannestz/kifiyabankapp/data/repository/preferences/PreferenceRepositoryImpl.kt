@@ -2,6 +2,7 @@ package com.github.yohannestz.kifiyabankapp.data.repository.preferences
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.github.yohannestz.kifiyabankapp.di.getValue
@@ -40,6 +41,12 @@ class PreferenceRepositoryImpl (
 
     override suspend fun setRefreshToken(token: String) {
         dataStore.setValue(REFRESH_TOKEN_KEY, token)
+    }
+
+    override suspend fun clearPreferences() {
+        dataStore.edit {
+            it.clear()
+        }
     }
 
     companion object {

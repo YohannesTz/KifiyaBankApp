@@ -15,4 +15,5 @@ interface PreferenceRepository {
 
     val refreshToken: Flow<String>
     suspend fun setRefreshToken(token: String)
+    suspend fun clearPreferences()
 }

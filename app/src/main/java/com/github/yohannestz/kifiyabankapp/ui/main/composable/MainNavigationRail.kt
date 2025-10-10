@@ -26,10 +26,10 @@ import com.github.yohannestz.kifiyabankapp.ui.base.BottomDestination.Companion.I
 
 @Composable
 fun MainNavigationRail(
+    modifier: Modifier = Modifier,
     navController: NavController,
     navRailExpanded: Boolean = false,
     onItemSelected: (Int) -> Unit,
-    modifier: Modifier = Modifier
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 

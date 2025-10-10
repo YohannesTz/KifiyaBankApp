@@ -44,7 +44,6 @@ import com.github.yohannestz.kifiyabankapp.data.model.User
 import com.github.yohannestz.kifiyabankapp.ui.base.BottomDestination
 import com.github.yohannestz.kifiyabankapp.ui.base.BottomDestination.Companion.isBottomDestination
 import com.github.yohannestz.kifiyabankapp.ui.base.BottomDestination.Companion.toBottomDestinationIndex
-import com.github.yohannestz.kifiyabankapp.ui.base.StartTab
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.NavActionManager.Companion.rememberNavActionManager
 import com.github.yohannestz.kifiyabankapp.ui.base.navigation.Route
@@ -57,12 +56,11 @@ import com.github.yohannestz.kifiyabankapp.ui.main.composable.MainNavigationRail
 import com.github.yohannestz.kifiyabankapp.ui.theme.KifiyaBankAppTheme
 import com.github.yohannestz.kifiyabankapp.ui.theme.dark_scrim
 import com.github.yohannestz.kifiyabankapp.ui.theme.light_scrim
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.annotation.KoinExperimentalAPI
-
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class, KoinExperimentalAPI::class)
 class MainActivity : ComponentActivity() {
@@ -82,8 +80,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             KoinAndroidContext {
-                val isDark =
-                    false //if (theme == ThemeStyle.FOLLOW_SYSTEM) isSystemInDarkTheme() else theme == ThemeStyle.DARK
+                val isDark = false
                 val navController = rememberNavController()
                 val navActionManager = rememberNavActionManager(navController)
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -92,6 +89,12 @@ class MainActivity : ComponentActivity() {
 
                 val windowSizeClass = calculateWindowSizeClass(this)
                 val windowWidthSizeClassType = windowSizeClass.widthSizeClass
+
+                LaunchedEffect(viewModel) {
+                    viewModel.navigationCommands.collect { route ->
+                        navController.navigate(route)
+                    }
+                }
 
                 ProvideCurrentUser(
                     user = uiState.currentUserProfile
@@ -149,16 +152,11 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun findLastTabOpened(): Int {
-        var lastTabOpened =
-            intent.action?.toBottomDestinationIndex()
-                ?: StartTab.HOME.value.toBottomDestinationIndex()
-
-        if (lastTabOpened == null) {
-            lastTabOpened = runBlocking { viewModel.lastTab.first() }
-        } else {
-            viewModel.saveLastTab(lastTabOpened)
+        val lastTabFromIntent = intent.action?.toBottomDestinationIndex()
+        return runBlocking {
+            val lastTabFromPrefs = viewModel.lastTab.firstOrNull() ?: 0
+            lastTabFromIntent ?: lastTabFromPrefs
         }
-        return lastTabOpened
     }
 }
 
@@ -205,12 +203,12 @@ fun MainView(
                 paddingValues = padding
             )
         } else {
-            val startDestination = /*if (currentUserProfile != null || hasAnAccount) {
+            val startDestination = if (currentUserProfile != null || hasAnAccount) {
                 BottomDestination.values
                     .getOrElse(lastTabOpened) { BottomDestination.Home }.route as Route
-            } else {*/
+            } else {
                 Route.Login
-            //}
+            }
 
             when (windowWidthSizeClass) {
                 WindowWidthSizeClass.Medium -> {
@@ -220,9 +218,9 @@ fun MainView(
                             .padding(padding)
                     ) {
                         MainNavigationRail(
+                            modifier = Modifier.padding(padding),
                             navController = navController,
-                            onItemSelected = saveLastTab,
-                            modifier = Modifier.padding(padding)
+                            onItemSelected = saveLastTab
                         )
                         MainNavigation(
                             navController = navController,
@@ -264,10 +262,10 @@ fun MainView(
                             .padding(padding)
                     ) {
                         MainNavigationRail(
+                            modifier = Modifier.padding(padding),
                             navController = navController,
-                            onItemSelected = saveLastTab,
                             navRailExpanded = true,
-                            modifier = Modifier.padding(padding)
+                            onItemSelected = saveLastTab
                         )
                         MainNavigation(
                             navController = navController,

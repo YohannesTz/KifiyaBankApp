@@ -14,9 +14,11 @@ import com.github.yohannestz.kifiyabankapp.di.networkModule
 import com.github.yohannestz.kifiyabankapp.di.repositoryModule
 import com.github.yohannestz.kifiyabankapp.di.serviceModule
 import com.github.yohannestz.kifiyabankapp.di.viewModelModule
+import com.github.yohannestz.kifiyabankapp.utils.jwt.TokenManager
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.startKoin
+import timber.log.Timber
 
 class KifiyaBankApp : Application(), KoinComponent, SingletonImageLoader.Factory {
 
@@ -33,6 +35,13 @@ class KifiyaBankApp : Application(), KoinComponent, SingletonImageLoader.Factory
                 repositoryModule,
                 viewModelModule,
             )
+        }
+
+        val tokenManager: TokenManager = getKoin().get()
+        tokenManager.startMonitoring()
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
         }
     }
 

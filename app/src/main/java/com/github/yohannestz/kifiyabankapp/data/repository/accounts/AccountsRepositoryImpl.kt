@@ -38,6 +38,8 @@ class AccountsRepositoryImpl(
         }
     }
 
+    override suspend fun clearAccountData() = accountsDao.clearAccounts()
+
     override suspend fun getAccounts(
         pageable: Pageable?,
         accountNumber: String?

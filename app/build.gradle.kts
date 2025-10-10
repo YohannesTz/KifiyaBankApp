@@ -99,6 +99,7 @@ dependencies {
 
     //Placeholder
     implementation(libs.placeholder.material3)
+    implementation(libs.timber)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

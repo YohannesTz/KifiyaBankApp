@@ -18,6 +18,7 @@ placeholderMaterial3 = "2.0.0"
 room = "2.6.1"
 ksp = "2.0.10-1.0.24"
 coreSplashscreen = "1.2.0-alpha02"
+timber = "5.0.1"
 workRuntimeKtx = "2.9.1"
 kotlinSerialization = "2.0.0"
 browser = "1.8.0"
@@ -75,6 +76,7 @@ androidx-datastore-core = { group = "androidx.datastore", name = "datastore-core
 androidx-datastore-preferences-core = { group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastorePreferencesCore" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationComposeVersion" }
 core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreenVersion" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
