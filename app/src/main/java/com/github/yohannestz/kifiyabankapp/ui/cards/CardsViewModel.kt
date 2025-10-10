@@ -71,7 +71,6 @@ class CardsViewModel(
 
     override fun createAccount() {
         Timber.e("creatAccount was clicked")
-        setLoading(true)
         mutableUiState.update {
             it.copy(
                 isAddingAccount = true
@@ -88,7 +87,6 @@ class CardsViewModel(
                 onSuccess = {
                     loadAccounts()
                     showAccountCreationDialog(false)
-                    setLoading(false)
                     showMessage("Account was created successfully!")
 
                     mutableUiState.update {
@@ -104,7 +102,6 @@ class CardsViewModel(
                     }
 
                     showMessage(message)
-                    setLoading(false)
 
                     mutableUiState.update {
                         it.copy(
