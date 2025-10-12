@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -52,7 +53,8 @@ fun CardsHorizontalPager(
             state = pagerState,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(220.dp)
+                .padding(vertical = 16.dp)
+                .wrapContentHeight()
         ) { page ->
             val account = accounts[page]
             PaymentCard(
@@ -70,8 +72,6 @@ fun CardsHorizontalPager(
                     .padding(horizontal = 8.dp)
             )
         }
-
-        Spacer(Modifier.height(12.dp))
 
         CustomPagerIndicator(
             pageCount = accounts.size,
@@ -94,7 +94,7 @@ fun CustomPagerIndicator(
     dotSpacing: Dp = 8.dp
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier.padding(vertical = 16.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {

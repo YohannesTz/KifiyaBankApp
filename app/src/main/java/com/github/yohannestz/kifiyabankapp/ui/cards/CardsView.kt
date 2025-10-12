@@ -115,24 +115,12 @@ private fun CardsViewContent(
                         .verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Spacer(Modifier.height(12.dp))
+                    Spacer(Modifier.height(8.dp))
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = stringResource(R.string.my_accounts),
-                            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
-                        )
-
-                        Spacer(
-                            modifier = Modifier.width(8.dp)
-                        )
-                    }
-
-                    Spacer(Modifier.height(16.dp))
+                    Text(
+                        text = stringResource(R.string.my_accounts),
+                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                    )
 
                     CardsHorizontalPager(
                         accounts = uiState.accounts,
@@ -140,11 +128,6 @@ private fun CardsViewContent(
                     )
 
                     if (uiState.bills.isNotEmpty()) {
-                        Text(
-                            text = stringResource(R.string.recent_bills),
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-                        )
-
                         Spacer(Modifier.height(8.dp))
 
                         uiState.bills.forEach { bill ->
@@ -155,7 +138,7 @@ private fun CardsViewContent(
                                     R.string.etb_bill_amount,
                                     String.format(Locale.ROOT, "%.2f", bill.amount)
                                 ),
-                                onClick = { /* future: navigate to details */ }
+                                onClick = {}
                             )
 
                             Spacer(Modifier.height(8.dp))

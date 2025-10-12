@@ -172,13 +172,16 @@ private fun TransferViewContent(
                     }
 
                     contacts.forEachIndexed { index, name ->
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
                             Image(
                                 painter = avatars[index],
                                 contentDescription = name,
                                 modifier = Modifier
-                                    .size(60.dp)
+                                    .size(48.dp)
                                     .clip(CircleShape)
+                                    .background(Color(0xFFE6E8F0))
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(name, style = MaterialTheme.typography.bodySmall)

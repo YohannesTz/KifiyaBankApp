@@ -18,7 +18,14 @@ data class CardsViewUiState(
     },
     val selectedAccountType: AccountType? = null,
     val showAccountCreationDialog: Boolean = false,
-    val bills: List<BillPaymentResponse> = emptyList(),
+    val bills: List<BillPaymentResponse> = listOf(
+        BillPaymentResponse(
+            message = "Monthly electricity bill",
+            amount = 1341.4,
+            accountNumber = "10000500156",
+            biller = "EEU"
+        )
+    ),
     val accounts: List<BankAccount> = emptyList(),
     val isLoadingBills: Boolean = false,
     val isAddingAccount: Boolean = false,
